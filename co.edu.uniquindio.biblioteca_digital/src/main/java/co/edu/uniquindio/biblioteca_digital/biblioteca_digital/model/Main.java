@@ -8,9 +8,9 @@ public class Main {
         Lector lector = biblioteca.registrarLector("1016", "andres", "ortega",
                 "andres@gmail.com", "123");
 
-        Lector lector2 = biblioteca.registrarLector("1016", "andres", "ortega",
+        Lector lector2 = biblioteca.registrarLector("1007", "andres", "ortega",
                 "andres@gmail.com", "321");
 
-        System.out.println(biblioteca.iniciarSesion("1007", "123", lector2));
+        System.out.println(biblioteca.iniciarSesion("1007", "321"));
     }
 }

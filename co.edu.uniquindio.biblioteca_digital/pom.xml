@@ -58,7 +58,7 @@
             <!-- Default configuration for running with: mvn clean javafx:run -->
             <id>default-cli</id>
             <configuration>
-              <mainClass>co.edu.uniquindio.biblioteca_digital.biblioteca_digital/co.edu.uniquindio.biblioteca_digital.biblioteca_digital.HelloApplication</mainClass>
+              <mainClass>co.edu.uniquindio.biblioteca_digital.biblioteca_digital/co.edu.uniquindio.biblioteca_digital.biblioteca_digital.BibliotecaDigitalApplication</mainClass>
               <launcher>app</launcher>
               <jlinkZipName>app</jlinkZipName>
               <jlinkImageName>app</jlinkImageName>

@@ -5,4 +5,6 @@ module co.edu.uniquindio.biblioteca_digital.biblioteca_digital {
 
     opens co.edu.uniquindio.biblioteca_digital.biblioteca_digital to javafx.fxml;
     exports co.edu.uniquindio.biblioteca_digital.biblioteca_digital;
+    exports co.edu.uniquindio.biblioteca_digital.biblioteca_digital.controllers;
+    opens co.edu.uniquindio.biblioteca_digital.biblioteca_digital.controllers to javafx.fxml;
 }
