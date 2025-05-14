@@ -12,7 +12,7 @@ public class BibliotecaDigitalApplication extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(BibliotecaDigitalApplication.class.getResource("inicioBiblioteca.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
-        stage.setTitle("Hello!");
+        stage.setTitle("Biblioteca digital");
         stage.setScene(scene);
         stage.show();
     }
