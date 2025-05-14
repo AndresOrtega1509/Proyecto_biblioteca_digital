@@ -16,7 +16,7 @@
     </Label>
 
     <GridPane alignment="CENTER" hgap="10.0" vgap="10.0">
-        <Label text="Número de identificación:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+        <Label text="Cédula:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
         <TextField fx:id="txtCedula" GridPane.columnIndex="1" GridPane.rowIndex="0" minHeight="30.0" />
 
         <Label text="Contraseña:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
