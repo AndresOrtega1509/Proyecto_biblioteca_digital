@@ -1,7 +1,7 @@
 package co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model;
 
 
-import co.edu.uniquindio.biblioteca_digital.biblioteca_digital.controller.ComparadorPrioridadUsuario;
+import co.edu.uniquindio.biblioteca_digital.biblioteca_digital.controllers.ComparadorPrioridadUsuario;
 
 import java.util.PriorityQueue;
 

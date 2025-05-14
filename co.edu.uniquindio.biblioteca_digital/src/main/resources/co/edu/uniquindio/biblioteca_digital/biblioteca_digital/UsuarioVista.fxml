@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<VBox spacing="10" alignment="CENTER" xmlns:fx="http://javafx.com/fxml" fx:controller="co.edu.uniquindio.biblioteca_digital.biblioteca_digital.viewController.UsuarioController">
+<VBox spacing="10" alignment="CENTER" xmlns:fx="http://javafx.com/fxml" fx:controller="co.edu.uniquindio.biblioteca_digital.biblioteca_digital.controllers.UsuarioController">
     <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
 
     <Label text="Gestión de Usuario - Biblioteca Digital" style="-fx-font-size: 18px;"/>

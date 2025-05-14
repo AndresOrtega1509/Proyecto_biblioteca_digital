@@ -1,4 +1,4 @@
-package co.edu.uniquindio.biblioteca_digital.biblioteca_digital.controller;
+package co.edu.uniquindio.biblioteca_digital.biblioteca_digital.controllers;
 
 import co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Lector;
 
