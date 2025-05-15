@@ -10,7 +10,7 @@ public class Libro {
     private String titulo;
     private boolean prestado;
     private PriorityQueue<Lector> listaDeEspera;
-
+    private String autor;
     private int totalValoraciones;
     private int sumaEstrellas;
     private double calificacionPromedio;
