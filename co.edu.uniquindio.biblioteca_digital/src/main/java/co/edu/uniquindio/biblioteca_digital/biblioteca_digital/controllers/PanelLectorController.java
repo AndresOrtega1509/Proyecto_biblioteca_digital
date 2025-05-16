@@ -15,13 +15,21 @@ public class PanelLectorController {
     private TextField txtNombre, txtId, txtTituloPrestamo, txtTituloValoracion, txtEstrellas;
     @FXML private TextArea areaHistorial, areaLibrosDisponibles, areaListaEspera;
     @FXML private TextField txtTituloConsultaEspera, txtNombreEspera, txtIdEspera;
+    @FXML
+    private Label labelUsuario;
+
 
     private Lector usuario;
+    private Lector usuarioRegistrado;
     private HashMap<String, Libro> biblioteca = new HashMap<>();
 
     // Aquí se utiliza una PriorityQueue para simular la cola de espera
     private HashMap<String, PriorityQueue<Lector>> colasEspera = new HashMap<>();
 
+    public void inicializarUsuario(Lector usuario) {
+        usuarioRegistrado = usuario;
+        labelUsuario.setText("Bienvenido, " + usuario.getNombre());
+    }
     @FXML
     public void initialize() {
         // Crear libros de prueba
@@ -44,8 +52,8 @@ public class PanelLectorController {
 
     @FXML
     public void handlePrestarLibro() {
-        if (usuario == null) {
-            registrarUsuario();
+        if (usuarioRegistrado == null) {
+            mostrarAlerta("No hay usuarios registrados");
         }
 
         String titulo = comboLibros.getValue();
@@ -54,12 +62,12 @@ public class PanelLectorController {
         if (libro == null) return;
 
         if (libro.getEstado().equals("disponible")) {
-            usuario.prestarLibro(libro);
+            usuarioRegistrado.prestarLibro(libro);
             mostrarAlerta("Libro prestado con éxito.");
             mostrarLibrosDisponibles();
             actualizarHistorial();
         } else {
-            libro.getListaDeEspera().add(usuario);
+            libro.getListaDeEspera().add(usuarioRegistrado);
             mostrarAlerta("El libro ya está prestado. Has sido agregado a la cola de espera. Tu posición: " + libro.getListaDeEspera().size());
         }
 
@@ -67,7 +75,7 @@ public class PanelLectorController {
 
     @FXML
     public void handleValorarLibro() {
-        if (usuario == null) registrarUsuario();
+        if (usuarioRegistrado == null)  mostrarAlerta("No hay usuarios registrados");
 
         String titulo = comboLibros.getValue();
         Libro libro = biblioteca.get(titulo);
@@ -80,7 +88,7 @@ public class PanelLectorController {
         dialog.setContentText("Estrellas:");
 
         dialog.showAndWait().ifPresent(puntaje -> {
-            usuario.valorarLibro(libro, puntaje);
+            usuarioRegistrado.valorarLibro(libro, puntaje);
             mostrarAlerta("Valoración registrada: " + puntaje + " estrellas");
         });
 
@@ -102,7 +110,7 @@ public class PanelLectorController {
                 sb.append(pos).append(". ").append(u.getNombre()).append(" (ID: ").append(u.getCedula()).append(")\n");
 
                 // Comparamos por ID
-                if (usuario != null && u.getCedula().equals(usuario.getCedula())) {
+                if (usuarioRegistrado != null && u.getCedula().equals(usuarioRegistrado.getCedula())) {
                     miPos = pos;
                 }
                 pos++;
@@ -110,7 +118,7 @@ public class PanelLectorController {
 
             if (miPos != -1) {
                 sb.append("\nTu posición en la cola: ").append(miPos);
-            } else if (usuario != null) {
+            } else if (usuarioRegistrado != null) {
                 sb.append("\nActualmente no estás en la cola de espera para este libro.");
             }
 
@@ -155,7 +163,7 @@ public class PanelLectorController {
 
     private void actualizarHistorial() {
         StringBuilder sb = new StringBuilder();
-        usuario.getHistorialPrestamos().forEach(p ->
+        usuarioRegistrado.getHistorialPrestamos().forEach(p ->
                 sb.append("- ").append(p.getLibro().getTitulo()).append(" (").append(p.getFecha()).append(")\n")
         );
         areaHistorial.setText(sb.toString());
@@ -181,20 +189,20 @@ public class PanelLectorController {
 
     @FXML
     public void handleVerHistorial() {
-        if (usuario == null) {
+        if (usuarioRegistrado == null) {
             mostrarAlerta("Debes registrarte primero para ver el historial.");
             return;
         }
 
-        System.out.println("Historial size: " + usuario.getHistorialPrestamos().size()); // DEBUG
+        System.out.println("Historial size: " + usuarioRegistrado.getHistorialPrestamos().size()); // DEBUG
 
         StringBuilder sb = new StringBuilder();
 
-        if (usuario.getHistorialPrestamos().isEmpty()) {
+        if (usuarioRegistrado.getHistorialPrestamos().isEmpty()) {
             sb.append("Aún no tienes libros en el historial de préstamos.");
         } else {
-            sb.append("Historial de préstamos de ").append(usuario.getNombre()).append(":\n\n");
-            for (Prestamo prestamo : usuario.getHistorialPrestamos()) {
+            sb.append("Historial de préstamos de ").append(usuarioRegistrado.getNombre()).append(":\n\n");
+            for (Prestamo prestamo : usuarioRegistrado.getHistorialPrestamos()) {
                 sb.append("- ").append(prestamo.getLibro().getTitulo())
                         .append(" (").append(prestamo.getFecha()).append(")\n");
             }

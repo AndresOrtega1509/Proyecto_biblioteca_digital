@@ -8,10 +8,10 @@
     <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
 
     <Label text="Gestión de Usuario - Biblioteca Digital" style="-fx-font-size: 18px;"/>
+    <Label fx:id="labelUsuario" style="-fx-font-size: 18px;" />
 
-    <TextField fx:id="txtNombre" promptText="Nombre del lector"/>
-    <TextField fx:id="txtId" promptText="ID del lector"/>
-    <Button text="Registrar usuario" onAction="#handleRegistrarUsuario"/>
+
+
 
 
     <Label text="Seleccionar Libro"/>

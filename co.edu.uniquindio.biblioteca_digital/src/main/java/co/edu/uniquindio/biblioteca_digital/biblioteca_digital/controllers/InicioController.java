@@ -44,6 +44,7 @@ public class InicioController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(nombreArchivoFxml));
             Parent root = loader.load();
 
+
             // Crear la escena
             Scene scene = new Scene(root);
 

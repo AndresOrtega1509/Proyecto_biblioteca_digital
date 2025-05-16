@@ -2,6 +2,8 @@ package co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model;
 
 import java.util.LinkedList;
 
+import static co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Biblioteca.listaLectores;
+
 public class Lector {
 
     private String cedula;
@@ -91,6 +93,7 @@ public class Lector {
         if (libro.estaDisponible()) {
             libro.setPrestado(true);
             historialPrestamos.add(new Prestamo(libro));
+            listaLectores.buscarLector("1094").setHistorialPrestamos(historialPrestamos);
             System.out.println(nombre + " ha prestado el libro: " + libro.getTitulo());
         } else {
             libro.agregarAListaDeEspera(this);

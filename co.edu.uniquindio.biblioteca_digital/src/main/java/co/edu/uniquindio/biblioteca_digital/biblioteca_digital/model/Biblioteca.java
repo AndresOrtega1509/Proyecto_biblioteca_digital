@@ -4,7 +4,7 @@ import static co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Sesi
 
 public class Biblioteca {
 
-    private ListaEnlazadaSimple listaLectores;
+    public static ListaEnlazadaSimple listaLectores;
     public static Biblioteca INSTANCIA;
     private final Sesion sesion = Sesion.getInstancia();
 
