@@ -2,7 +2,7 @@ package co.edu.uniquindio.biblioteca_digital.biblioteca_digital.controllers;
 
 import co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Biblioteca;
 import co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Lector;
-import co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.ListaEnlazadaSimple;
+import co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.ListaLector;
 import co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Sesion;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -14,6 +14,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import static co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Biblioteca.listaLectores;
+
 
 public class LoginController {
 
@@ -77,7 +78,7 @@ public class LoginController {
      * @param tituloVentana
      * @param usuario
      */
-    private void navegarVentana(String nombreArchivoFxml, String tituloVentana, Lector usuario, ListaEnlazadaSimple listaLectores) {
+    private void navegarVentana(String nombreArchivoFxml, String tituloVentana, Lector usuario, ListaLector listaLectores) {
 
         try {
 

@@ -2,7 +2,7 @@ package co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model;
 
 public class Biblioteca {
 
-    private ListaLector listaLectores;
+    public static ListaLector listaLectores;
     public static Biblioteca INSTANCIA;
     private final Sesion sesion = Sesion.getInstancia();
 

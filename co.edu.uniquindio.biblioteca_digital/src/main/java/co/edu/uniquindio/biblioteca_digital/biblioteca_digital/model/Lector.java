@@ -4,6 +4,7 @@ import java.util.LinkedList;
 
 import static co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Biblioteca.listaLectores;
 
+
 public class Lector {
 
     private String cedula;
