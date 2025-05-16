@@ -1,11 +1,11 @@
 package co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model;
 
-public class ListaEnlazadaSimple {
+public class ListaLector {
 
     private NodoLector nodoPrimero;
     private int tamanio;
 
-    public ListaEnlazadaSimple(){
+    public ListaLector(){
         nodoPrimero = null;
         tamanio = 0;
     }

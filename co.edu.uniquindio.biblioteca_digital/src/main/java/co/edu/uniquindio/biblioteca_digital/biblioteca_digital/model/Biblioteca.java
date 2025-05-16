@@ -1,15 +1,13 @@
 package co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model;
 
-import static co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Sesion.INSTANCIA;
-
 public class Biblioteca {
 
-    public static ListaEnlazadaSimple listaLectores;
+    private ListaLector listaLectores;
     public static Biblioteca INSTANCIA;
     private final Sesion sesion = Sesion.getInstancia();
 
     public Biblioteca(){
-        listaLectores = new ListaEnlazadaSimple();
+        listaLectores = new ListaLector();
     }
 
     public Lector registrarLector(String cedula, String nombre, String apellido, String correo, String passWord){
