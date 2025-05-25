@@ -94,7 +94,7 @@ public class Lector {
         if (libro.estaDisponible()) {
             libro.setPrestado(true);
             historialPrestamos.add(new Prestamo(libro));
-            listaLectores.buscarLector("1094").setHistorialPrestamos(historialPrestamos);
+            listaLectores.buscarLector(cedula).setHistorialPrestamos(historialPrestamos);
             System.out.println(nombre + " ha prestado el libro: " + libro.getTitulo());
         } else {
             libro.agregarAListaDeEspera(this);
