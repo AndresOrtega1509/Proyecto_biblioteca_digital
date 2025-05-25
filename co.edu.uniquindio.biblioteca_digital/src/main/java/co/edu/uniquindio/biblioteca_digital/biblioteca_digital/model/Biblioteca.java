@@ -8,6 +8,13 @@ public class Biblioteca {
 
     public Biblioteca(){
         listaLectores = new ListaLector();
+        cargarDatosPrueba();
+    }
+
+    private void cargarDatosPrueba() {
+
+        Lector lector = new Lector("123", "Miguel", "Sanchez", "miguel@gmail.com", "111");
+        listaLectores.agregar(lector);
     }
 
     public Lector registrarLector(String cedula, String nombre, String apellido, String correo, String passWord){

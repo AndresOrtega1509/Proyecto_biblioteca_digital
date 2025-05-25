@@ -230,5 +230,6 @@ public class PanelLectorController {
         mostrarAlerta("Usuario registrado con éxito: " + usuario.getNombre());
     }
     public void inicializarValores(Lector usuario) {
+        this.usuarioRegistrado = usuario;
     }
 }
