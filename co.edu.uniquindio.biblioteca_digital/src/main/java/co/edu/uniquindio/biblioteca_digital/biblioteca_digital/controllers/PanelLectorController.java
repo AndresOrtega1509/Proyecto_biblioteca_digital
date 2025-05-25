@@ -1,13 +1,19 @@
 package co.edu.uniquindio.biblioteca_digital.biblioteca_digital.controllers;
 
-import co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Lector;
-import co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Libro;
-import co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Prestamo;
+import co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.*;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
 import java.util.HashMap;
+import java.util.List;
 import java.util.PriorityQueue;
+
+import static co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.ListaLector.obtenerLectores;
 
 public class PanelLectorController {
 
@@ -18,7 +24,7 @@ public class PanelLectorController {
     @FXML
     private Label labelUsuario;
 
-
+    String receptorSelect;
     private Lector usuario;
     private Lector usuarioRegistrado;
     private HashMap<String, Libro> biblioteca = new HashMap<>();
@@ -29,6 +35,48 @@ public class PanelLectorController {
     public void inicializarUsuario(Lector usuario) {
         usuarioRegistrado = usuario;
         labelUsuario.setText("Bienvenido, " + usuario.getNombre());
+        comboUsuarios.getItems().addAll(
+                obtenerLectores()
+                        .stream()
+                        .map(Lector::getNombre)
+                        .toList()
+        );
+        iniciarCliente();
+    }
+
+    private DataOutputStream flujoSalida;
+
+    public void iniciarCliente() {
+        try {
+            Socket socketComunicacion = new Socket("localhost", 8081);
+            DataInputStream flujoEntrada = new DataInputStream(socketComunicacion.getInputStream());
+            flujoSalida = new DataOutputStream(socketComunicacion.getOutputStream());
+
+            // Hilo para recibir mensajes
+            HiloClienteEntrada hiloClienteEntrada = new HiloClienteEntrada(flujoEntrada,areaMensajes);
+            hiloClienteEntrada.start();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void enviarMensaje2() {
+        String mensaje = txtMensaje.getText();
+        if (!mensaje.isEmpty()) {
+            try {
+                String clienteId = usuarioRegistrado.getNombre();
+                String mensajeCompleto = clienteId + ": " + mensaje;
+                flujoSalida.writeUTF(mensajeCompleto);
+
+                // Mostrar el mensaje en el propio cliente
+                areaMensajes.appendText(mensajeCompleto + "\n");
+
+               // campoMensaje.setText("");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
     @FXML
     public void initialize() {
@@ -47,6 +95,8 @@ public class PanelLectorController {
         });
 
         mostrarLibrosDisponibles();
+
+
 
     }
 
@@ -230,5 +280,78 @@ public class PanelLectorController {
         mostrarAlerta("Usuario registrado con éxito: " + usuario.getNombre());
     }
     public void inicializarValores(Lector usuario) {
+    }
+
+
+    @FXML private ComboBox<String> comboUsuarios;
+    @FXML private TextArea areaMensajes;
+    @FXML private TextField txtMensaje;
+
+    private String usuarioActual = obtenerLectores().get(0).getNombre(); // Simulación del usuario conectado
+    private final HistorialMensajes historial = new HistorialMensajes();
+
+
+    private void mostrarMensajes(String receptor) {
+        List<String> mensajes = historial.obtenerHistorial(receptor);
+        areaMensajes.clear();
+        for (String m : mensajes) {
+            areaMensajes.appendText(m.toString() + "\n");
+        }
+    }
+
+    @FXML
+    public void handleEnviarMensaje() {
+        receptorSelect = comboUsuarios.getValue(); // Usuario al que se envía el mensaje
+        String texto = txtMensaje.getText(); // Contenido del mensaje
+
+        if (receptorSelect == null || texto == null || texto.trim().isEmpty()) {
+            mostrarAlerta("Selecciona un usuario receptor y escribe un mensaje.");
+            return;
+        }
+
+        // Crear mensaje y agregar al historial
+        Mensaje mensaje = new Mensaje(usuarioRegistrado.getNombre(), receptorSelect, texto.trim());
+        historial.agregarMensaje(receptorSelect,mensaje.toString());
+
+        //cliente.enviarMensaje(receptorSelect, texto.trim());
+
+        enviarMensaje2();
+
+
+        // Mostrar el historial actualizado en pantalla
+        mostrarMensajes(receptorSelect);
+        chatArea.appendText("Yo a " + receptorSelect + ": " + mensaje + "\n");
+
+        // Limpiar campo de entrada
+        txtMensaje.clear();
+    }
+
+
+
+    @FXML private TextArea chatArea;
+    @FXML private TextField mensajeField, destinatarioField;
+    @FXML private Button enviarBtn;
+    private HistorialMensajes gestorHistorial = new HistorialMensajes();
+
+    public void recibirMensaje(String mensaje) {
+        Platform.runLater(() -> {
+            chatArea.appendText(mensaje + "\n");
+            // opcional: extraer nombre y guardar en historial
+        });
+    }
+
+    private void actualizarUsuariosConectados(List<String> usuarios) {
+        Platform.runLater(() -> {
+            usuarios.add(usuarioRegistrado.getNombre());
+            //comboUsuarios.getItems().setAll(obtenerLectores());
+
+            comboUsuarios.getItems().setAll(
+                    obtenerLectores()
+                            .stream()
+                            .map(Lector::getNombre)
+                            .toList()
+            );
+            //comboUsuarios.getItems().remove(nombreUsuario); // No incluirse a sí mismo
+        });
     }
 }

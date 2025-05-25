@@ -1,5 +1,7 @@
 package co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model;
 
+
+
 public class Biblioteca {
 
     public static ListaLector listaLectores;

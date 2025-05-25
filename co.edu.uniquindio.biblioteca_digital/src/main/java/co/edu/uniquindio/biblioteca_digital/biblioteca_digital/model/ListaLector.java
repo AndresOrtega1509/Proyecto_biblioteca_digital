@@ -1,8 +1,11 @@
 package co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ListaLector {
 
-    private NodoLector nodoPrimero;
+    private static NodoLector nodoPrimero;
     private int tamanio;
 
     public ListaLector(){
@@ -39,5 +42,17 @@ public class ListaLector {
             actual = actual.getNodoSiguiente();
         }
         return null;
+    }
+
+    public static List<Lector> obtenerLectores() {
+        List<Lector> lectores = new ArrayList<>();
+        NodoLector actual = nodoPrimero;
+
+        while (actual != null) {
+            lectores.add(actual.getLector());
+            actual = actual.getNodoSiguiente();
+        }
+
+        return lectores;
     }
 }
