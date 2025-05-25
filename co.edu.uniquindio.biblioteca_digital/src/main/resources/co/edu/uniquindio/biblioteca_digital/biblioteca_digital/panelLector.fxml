@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="10" alignment="CENTER" xmlns:fx="http://javafx.com/fxml" fx:controller="co.edu.uniquindio.biblioteca_digital.biblioteca_digital.controllers.PanelLectorController">
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+    <Label text="Gestión de Usuario - Biblioteca Digital" style="-fx-font-size: 18px;"/>
+    <Label fx:id="labelUsuario" style="-fx-font-size: 18px;" />
+
+
+
+
+
+    <Label text="Seleccionar Libro"/>
+    <ComboBox fx:id="comboLibros" promptText="Seleccione un libro"/>
+
+    <HBox spacing="10">
+        <Button text="Prestar libro" fx:id="btnPrestar" onAction="#handlePrestarLibro" disable="true"/>
+        <Button text="Valorar libro" fx:id="btnValorar" onAction="#handleValorarLibro" disable="true"/>
+        <Button text="Consultar cola de espera" fx:id="btnConsultarCola" onAction="#handleConsultarListaEspera" disable="true"/>
+        <Button text="Ver historial" fx:id="btnHistorial" onAction="#handleVerHistorial" disable="true"/>
+    </HBox>
+
+    <TextArea fx:id="areaLibrosDisponibles" editable="false" prefHeight="70"/>
+    <TextArea fx:id="areaListaEspera" editable="false" prefHeight="70"/>
+    <TextArea fx:id="areaHistorial" editable="false" prefHeight="70"/>
+
+
+    <Label text="Mensajería entre lectores" style="-fx-font-size: 16px;"/>
+
+    <ComboBox fx:id="comboUsuarios" promptText="usuarios conectados"/>
+    <TextArea fx:id="areaMensajes" editable="false" prefHeight="25"/>
+    <TextArea fx:id="chatArea" editable="false" prefHeight="25"/>
+
+
+    <TextField fx:id="txtMensaje" promptText="Escribe tu mensaje aquí..."/>
+    <Button text="Enviar" onAction="#handleEnviarMensaje"/>
+</VBox>
