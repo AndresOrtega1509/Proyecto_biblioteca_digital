@@ -4,25 +4,29 @@ import co.edu.uniquindio.biblioteca_digital.biblioteca_digital.controllers.obser
 import co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Biblioteca;
 import co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Lector;
 import co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Libro;
+import co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.ListaLector;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 import java.util.List;
+import java.util.Optional;
 
+import static co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Biblioteca.listaLectores;
 import static co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Biblioteca.listaLibros;
 
 public class PanelAdministradorController implements ObservableLibros {
 
+    private ObservableList<Lector> lectoresObservable = FXCollections.observableArrayList();
     @FXML
     private TableView<Libro> tableLibros;
 
@@ -64,6 +68,8 @@ public class PanelAdministradorController implements ObservableLibros {
 
     private Libro libroSeleccionado;
 
+    private final Biblioteca biblioteca = Biblioteca.getInstancia();
+
 
     @FXML
     public void initialize(){
@@ -95,7 +101,8 @@ public class PanelAdministradorController implements ObservableLibros {
     }
 
     private void mostrarUsuariosTabla() {
-
+        lectoresObservable.setAll(ListaLector.obtenerLectores());
+        tableUsuarios.setItems(lectoresObservable);
     }
 
     public void mostrarLibrosTabla() {
@@ -112,7 +119,50 @@ public class PanelAdministradorController implements ObservableLibros {
 
     @FXML
     void actualizarUsuario(ActionEvent event) {
+        Lector seleccionado = tableUsuarios.getSelectionModel().getSelectedItem();
+        if (seleccionado == null) {
+            crearAlerta("Seleccione un usuario para actualizar.", Alert.AlertType.WARNING);
+            return;
+        }
 
+        // Crear campos prellenados
+        TextField nombreField = new TextField(seleccionado.getNombre());
+        TextField apellidoField = new TextField(seleccionado.getApellido());
+        TextField correoField = new TextField(seleccionado.getCorreo());
+        TextField passField = new TextField(seleccionado.getPassWord());
+
+        // Crear layout
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        grid.add(new Label("Nombre:"), 0, 0);
+        grid.add(nombreField, 1, 0);
+        grid.add(new Label("Apellido:"), 0, 1);
+        grid.add(apellidoField, 1, 1);
+        grid.add(new Label("Correo:"), 0, 2);
+        grid.add(correoField, 1, 2);
+        grid.add(new Label("Contraseña:"), 0, 3);
+        grid.add(passField, 1, 3);
+
+        // Crear el diálogo
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("Actualizar Usuario");
+        dialog.getDialogPane().setContent(grid);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        Optional<ButtonType> result = dialog.showAndWait();
+
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            // Actualizar atributos
+            seleccionado.setNombre(nombreField.getText().trim());
+            seleccionado.setApellido(apellidoField.getText().trim());
+            seleccionado.setCorreo(correoField.getText().trim());
+            seleccionado.setPassWord(passField.getText().trim());
+
+            tableUsuarios.refresh(); // Refresca visualmente la tabla
+        }
     }
 
     @FXML
@@ -124,8 +174,38 @@ public class PanelAdministradorController implements ObservableLibros {
 
     @FXML
     void agregarUsuario(ActionEvent event) {
-        navegarVentanaAgregarUsuarios("/co/edu/uniquindio/biblioteca_digital/biblioteca_digital/registroUsuario.fxml",
-                "Biblioteca - Registro del usuario");
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Agregar Usuario");
+        dialog.setHeaderText("Ingrese los datos del nuevo lector");
+
+        try {
+            dialog.setContentText("Cédula:");
+            Optional<String> cedula = dialog.showAndWait();
+            if (!cedula.isPresent()) return;
+
+            dialog.setContentText("Nombre:");
+            Optional<String> nombre = dialog.showAndWait();
+            if (!nombre.isPresent()) return;
+
+            dialog.setContentText("Apellido:");
+            Optional<String> apellido = dialog.showAndWait();
+            if (!apellido.isPresent()) return;
+
+            dialog.setContentText("Correo:");
+            Optional<String> correo = dialog.showAndWait();
+            if (!correo.isPresent()) return;
+
+            dialog.setContentText("Contraseña:");
+            Optional<String> pass = dialog.showAndWait();
+            if (!pass.isPresent()) return;
+
+
+            Lector nuevo = biblioteca.registrarLector(cedula.get(), nombre.get(), apellido.get(), correo.get(), pass.get()); //Agrega a la lista enlazada
+            lectoresObservable.add(nuevo); // Agrega a la observable para la tabla
+        }catch (Exception e) {
+            crearAlerta(e.getMessage(), Alert.AlertType.ERROR);
+        }
+
     }
 
     @FXML
@@ -144,7 +224,17 @@ public class PanelAdministradorController implements ObservableLibros {
 
     @FXML
     void eliminarUsuario(ActionEvent event) {
-
+        Lector seleccionado = tableUsuarios.getSelectionModel().getSelectedItem();
+        if (seleccionado != null) {
+            boolean eliminado = listaLectores.eliminar(seleccionado.getCedula());
+            if (eliminado) {
+                lectoresObservable.remove(seleccionado);
+            } else {
+                crearAlerta("No se pudo eliminar el usuario.", Alert.AlertType.ERROR);
+            }
+        } else {
+            crearAlerta("Seleccione un usuario para eliminar.", Alert.AlertType.WARNING);
+        }
     }
 
     @FXML
