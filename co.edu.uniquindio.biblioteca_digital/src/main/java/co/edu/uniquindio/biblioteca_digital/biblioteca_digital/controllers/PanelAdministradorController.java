@@ -1,5 +1,6 @@
 package co.edu.uniquindio.biblioteca_digital.biblioteca_digital.controllers;
 
+import co.edu.uniquindio.biblioteca_digital.biblioteca_digital.controllers.observador.ObservableLibros;
 import co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Biblioteca;
 import co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Lector;
 import co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Libro;
@@ -20,7 +21,7 @@ import java.util.List;
 
 import static co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Biblioteca.listaLibros;
 
-public class PanelAdministradorController {
+public class PanelAdministradorController implements ObservableLibros {
 
     @FXML
     private TableView<Libro> tableLibros;
@@ -97,7 +98,7 @@ public class PanelAdministradorController {
 
     }
 
-    private void mostrarLibrosTabla() {
+    public void mostrarLibrosTabla() {
         List<Libro> libros = listaLibros.listarLibrosInorden();
         ObservableList<Libro> librosObservable = FXCollections.observableArrayList(libros);
         tableLibros.setItems(librosObservable);
@@ -117,13 +118,13 @@ public class PanelAdministradorController {
     @FXML
     void agregarLibro(ActionEvent event) {
 
-        navegarVentana("/co/edu/uniquindio/biblioteca_digital/biblioteca_digital/crearLibro.fxml",
-                "Administrador - AgregarLibro");
+        navegarVentanaAgregarLibros("/co/edu/uniquindio/biblioteca_digital/biblioteca_digital/crearLibro.fxml",
+                "Administrador - AgregarLibro", this);
     }
 
     @FXML
     void agregarUsuario(ActionEvent event) {
-        navegarVentana("/co/edu/uniquindio/biblioteca_digital/biblioteca_digital/registroUsuario.fxml",
+        navegarVentanaAgregarUsuarios("/co/edu/uniquindio/biblioteca_digital/biblioteca_digital/registroUsuario.fxml",
                 "Biblioteca - Registro del usuario");
     }
 
@@ -171,13 +172,41 @@ public class PanelAdministradorController {
 
     }
 
-    public void navegarVentana(String nombreArchivoFxml, String tituloVentana) {
+    public void navegarVentanaAgregarLibros(String nombreArchivoFxml, String tituloVentana, ObservableLibros observableLibros) {
         try {
 
             // Cargar la vista
             FXMLLoader loader = new FXMLLoader(getClass().getResource(nombreArchivoFxml));
             Parent root = loader.load();
 
+            // Obtener el controlador de la nueva ventana
+            CrearLibroController controller = loader.getController();
+            controller.inicializarObservable(observableLibros);
+
+
+            // Crear la escena
+            Scene scene = new Scene(root);
+
+            // Crear un nuevo escenario (ventana)
+            Stage stage = new Stage();
+            stage.setScene(scene);
+            stage.setResizable(false);
+            stage.setTitle(tituloVentana);
+
+            // Mostrar la nueva ventana
+            stage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void navegarVentanaAgregarUsuarios(String nombreArchivoFxml, String tituloVentana) {
+        try {
+
+            // Cargar la vista
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(nombreArchivoFxml));
+            Parent root = loader.load();
 
             // Crear la escena
             Scene scene = new Scene(root);

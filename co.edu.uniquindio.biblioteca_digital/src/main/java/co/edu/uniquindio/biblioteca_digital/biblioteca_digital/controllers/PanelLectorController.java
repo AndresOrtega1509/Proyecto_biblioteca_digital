@@ -2,6 +2,7 @@ package co.edu.uniquindio.biblioteca_digital.biblioteca_digital.controllers;
 
 import co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.*;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
@@ -14,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.PriorityQueue;
 
+import static co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Biblioteca.listaLectores;
 import static co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.ListaLector.obtenerLectores;
 import static co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Biblioteca.listaLibros;
 
@@ -91,6 +93,7 @@ public class PanelLectorController {
         comboLibros.setOnAction(e -> {
             boolean libroSeleccionado = comboLibros.getValue() != null;
             btnPrestar.setDisable(!libroSeleccionado);
+            btndevolver.setDisable(!libroSeleccionado);
             btnValorar.setDisable(!libroSeleccionado);
             btnConsultarCola.setDisable(!libroSeleccionado);
             btnHistorial.setDisable(!libroSeleccionado);
@@ -235,7 +238,7 @@ public class PanelLectorController {
     @FXML
     private ComboBox<Libro> comboLibros;
 
-    @FXML private Button btnPrestar, btnValorar, btnConsultarCola, btnHistorial;
+    @FXML private Button btnPrestar,  btndevolver,btnValorar, btnConsultarCola, btnHistorial;
 
     @FXML
     public void handleVerHistorial() {
@@ -354,5 +357,37 @@ public class PanelLectorController {
             );
             //comboUsuarios.getItems().remove(nombreUsuario); // No incluirse a sí mismo
         });
+    }
+
+    public void handleDevolverLibro(ActionEvent actionEvent) {
+
+        if (usuarioRegistrado == null) {
+            mostrarAlerta("No hay usuarios registrados");
+        }
+
+        Libro libro = comboLibros.getValue();
+
+
+        if (libro == null) return;
+
+        String LibroPrestado = listaLectores.recorrerLectores(libro);
+
+        if (LibroPrestado != null) {
+            if (libro.getEstado().equals("prestado")) {
+                usuarioRegistrado.devolverLibro(libro);
+                mostrarAlerta("Libro devuelto con éxito.");
+                // mostrarLibrosDisponiblesDspuesDePrestar();
+                actualizarHistorial();
+
+            } else {
+                libro.getListaDeEspera().add(usuarioRegistrado);
+                mostrarAlerta("El libro ya está prestado. Has sido agregado a la cola de espera. Tu posición: " + libro.getListaDeEspera().size());
+            }
+        } else {
+            libro.getListaDeEspera().add(usuarioRegistrado);
+            mostrarAlerta("El libro ya está prestado al lector: " + LibroPrestado + " Has sido agregado a la cola de espera. Tu posición: " + libro.getListaDeEspera().size());
+
+        }
+        mostrarLibrosDisponibles();
     }
 }

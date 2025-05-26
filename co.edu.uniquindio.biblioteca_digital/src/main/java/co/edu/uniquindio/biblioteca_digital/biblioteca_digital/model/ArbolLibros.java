@@ -1,5 +1,8 @@
 package co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,5 +1,6 @@
 package co.edu.uniquindio.biblioteca_digital.biblioteca_digital.controllers;
 
+import co.edu.uniquindio.biblioteca_digital.biblioteca_digital.controllers.observador.ObservableLibros;
 import co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Biblioteca;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -18,6 +19,7 @@ public class CrearLibroController {
     @FXML
     private TextField txtCategoria;
     private final Biblioteca biblioteca = Biblioteca.getInstancia();
+    private ObservableLibros observableLibros;
 
 
     public void agregarLibro(ActionEvent actionEvent) {
@@ -29,6 +31,7 @@ public class CrearLibroController {
 
             // Se muestra un mensaje de éxito y se cierra la ventana
             crearAlerta("Libro agregado correctamente", Alert.AlertType.INFORMATION);
+            observableLibros.mostrarLibrosTabla();
             cerrarVentana();
 
         } catch (Exception e) {
@@ -56,5 +59,9 @@ public class CrearLibroController {
     public void cerrarVentana() {
         Stage stage = (Stage) txtAutor.getScene().getWindow();
         stage.close();
+    }
+
+    public void inicializarObservable(ObservableLibros observableLibros) {
+        this.observableLibros = observableLibros;
     }
 }
