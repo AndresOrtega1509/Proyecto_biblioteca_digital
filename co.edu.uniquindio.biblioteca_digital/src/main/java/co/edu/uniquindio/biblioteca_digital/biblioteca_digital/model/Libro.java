@@ -11,7 +11,9 @@ public class Libro {
     private boolean prestado;
     private PriorityQueue<Lector> listaDeEspera;
     private String autor;
+    private String categoria;
     private int totalValoraciones;
+    private int anio;
     private int sumaEstrellas;
     private double calificacionPromedio;
 

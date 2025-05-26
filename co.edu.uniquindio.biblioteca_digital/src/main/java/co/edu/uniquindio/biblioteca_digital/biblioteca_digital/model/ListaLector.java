@@ -55,4 +55,22 @@ public class ListaLector {
 
         return lectores;
     }
+
+    public String recorrerLectores(Libro libro){
+        NodoLector actual = nodoPrimero;
+
+        while (actual != null) {
+            List<Prestamo> historial = actual.getLector().getHistorialPrestamos();
+
+            for (Prestamo prestamo : historial) {
+                if (prestamo.getLibro().getTitulo().equalsIgnoreCase(libro.getTitulo())) {
+                    return actual.getLector().getNombre(); // Devuelve el nombre del lector que prestó el libro
+                }
+            }
+
+            actual = actual.getNodoSiguiente();
+        }
+
+        return null; // Si ningún lector ha prestado el libro
+    }
 }

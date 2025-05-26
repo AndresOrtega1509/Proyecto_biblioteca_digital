@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.PriorityQueue;
 
+import static co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Biblioteca.getInstancia;
+import static co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Biblioteca.listaLectores;
 import static co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.ListaLector.obtenerLectores;
 
 public class PanelLectorController {
@@ -42,6 +44,8 @@ public class PanelLectorController {
                         .toList()
         );
         iniciarCliente();
+        mostrarLibrosDisponibles();
+
     }
 
     private DataOutputStream flujoSalida;
@@ -94,7 +98,7 @@ public class PanelLectorController {
             btnHistorial.setDisable(!libroSeleccionado);
         });
 
-        mostrarLibrosDisponibles();
+        //mostrarLibrosDisponibles();
 
 
 
@@ -109,17 +113,28 @@ public class PanelLectorController {
         String titulo = comboLibros.getValue();
         Libro libro = biblioteca.get(titulo);
 
+
         if (libro == null) return;
 
-        if (libro.getEstado().equals("disponible")) {
-            usuarioRegistrado.prestarLibro(libro);
-            mostrarAlerta("Libro prestado con éxito.");
-            mostrarLibrosDisponibles();
-            actualizarHistorial();
-        } else {
-            libro.getListaDeEspera().add(usuarioRegistrado);
-            mostrarAlerta("El libro ya está prestado. Has sido agregado a la cola de espera. Tu posición: " + libro.getListaDeEspera().size());
-        }
+        String LibroPrestado = listaLectores.recorrerLectores(libro);
+
+if(LibroPrestado==null) {
+    if (libro.getEstado().equals("disponible")) {
+        usuarioRegistrado.prestarLibro(libro);
+        mostrarAlerta("Libro prestado con éxito.");
+        mostrarLibrosDisponiblesDspuesDePrestar();
+        actualizarHistorial();
+
+    } else {
+        libro.getListaDeEspera().add(usuarioRegistrado);
+        mostrarAlerta("El libro ya está prestado. Has sido agregado a la cola de espera. Tu posición: " + libro.getListaDeEspera().size());
+    }
+}else {
+    libro.getListaDeEspera().add(usuarioRegistrado);
+    mostrarAlerta("El libro ya está prestado al lector: "+ LibroPrestado  +" Has sido agregado a la cola de espera. Tu posición: " + libro.getListaDeEspera().size());
+
+}
+        mostrarLibrosDisponibles();
 
     }
 
@@ -226,10 +241,64 @@ public class PanelLectorController {
     }
 
     private void mostrarLibrosDisponibles() {
+
         StringBuilder sb = new StringBuilder();
-        biblioteca.values().forEach(libro -> {
-            sb.append("- ").append(libro.getTitulo()).append(" (").append(libro.getEstado()).append(")\n");
-        });
+        obtenerLectores().iterator();
+        Lector librosDisponiblesLector;
+        Libro estadoLibroActual;
+        if (listaLectores.getTamanio()>1){
+            mostrarLibrosDisponiblesDspuesDePrestar();
+        }else {
+            biblioteca.values().forEach(libro -> {
+                sb.append("- ").append(libro.getTitulo()).append(" (").append(libro.getEstado()).append(")\n");
+            });
+            areaLibrosDisponibles.setText(sb.toString());
+        }
+    }
+
+    private void mostrarLibrosDisponiblesDspuesDePrestar() {
+        StringBuilder sb = new StringBuilder();
+        areaLibrosDisponibles.setText("");
+
+        obtenerLectores().iterator();
+        Lector librosDisponiblesLector;
+        Libro estadoLibroActual;
+        Boolean hayPrestados= false;
+
+        for (int i = 0 ; i <obtenerLectores().size(); i++){
+            librosDisponiblesLector = obtenerLectores().get(i);
+            if(librosDisponiblesLector.getHistorialPrestamos().size()!= 0) {
+                for (int j=0; j< librosDisponiblesLector.getHistorialPrestamos().size();j++) {
+                    estadoLibroActual = librosDisponiblesLector.getHistorialPrestamos().get(j).getLibro();
+                    if (estadoLibroActual.getEstado().trim().equalsIgnoreCase("prestado")) {
+
+                        Libro finalEstadoLibroActual = estadoLibroActual;
+                        int finalJ = j;
+                        biblioteca.values().forEach(libro -> {
+                            if(libro.getTitulo().equals(finalEstadoLibroActual.getTitulo())){
+                                sb.append("- ").append(finalEstadoLibroActual.getTitulo()).append(" (").append(finalEstadoLibroActual.getEstado()).append(")\n");
+
+                            }
+                        });
+                        hayPrestados = true;
+                    }
+                }
+            }else {
+
+                if (!hayPrestados && obtenerLectores().size()==i+1){
+
+                    biblioteca.values().forEach(libro -> {
+                        sb.append("- ").append(libro.getTitulo()).append(" (").append(libro.getEstado()).append(")\n");
+                    });
+
+                    areaLibrosDisponibles.setText(sb.toString());
+                }
+
+            }
+        }
+
+
+
         areaLibrosDisponibles.setText(sb.toString());
     }
     @FXML
