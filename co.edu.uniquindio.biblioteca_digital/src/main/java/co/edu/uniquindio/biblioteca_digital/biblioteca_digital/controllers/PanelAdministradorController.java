@@ -74,7 +74,7 @@ public class PanelAdministradorController {
 
         tcTituloLibro.setCellValueFactory(CellData -> new SimpleStringProperty(CellData.getValue().getTitulo()));
         tcAutorLibro.setCellValueFactory(CellData -> new SimpleStringProperty(CellData.getValue().getAutor()));
-        tcAnioLibro.setCellValueFactory(CellData -> new SimpleStringProperty(CellData.getValue().getAnio()));
+        tcAnioLibro.setCellValueFactory(CellData -> new SimpleStringProperty("" + CellData.getValue().getAnio()));
         tcCategoriaLibro.setCellValueFactory(CellData -> new SimpleStringProperty(CellData.getValue().getCategoria()));
         tcEstadoLibro.setCellValueFactory(CellData -> new SimpleStringProperty(CellData.getValue().getEstado()));
         tcCalificacionPromedioLibro.setCellValueFactory(CellData -> new SimpleStringProperty("" + CellData.getValue().getCalificacionPromedio()));
@@ -89,7 +89,6 @@ public class PanelAdministradorController {
     private void listenerSelectionLibro() {
         tableLibros.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             libroSeleccionado = newSelection;
-            System.out.println(libroSeleccionado);
         });
 
     }
@@ -138,7 +137,7 @@ public class PanelAdministradorController {
             listaLibros.eliminarPorTitulo(libroSeleccionado.getTitulo());
             mostrarLibrosTabla();
             crearAlerta("El libro ha sido eliminado exitosamente", Alert.AlertType.INFORMATION);
-            
+
         }
     }
 

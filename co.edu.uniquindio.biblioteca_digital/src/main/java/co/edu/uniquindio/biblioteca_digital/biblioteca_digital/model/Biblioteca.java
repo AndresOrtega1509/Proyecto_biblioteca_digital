@@ -20,7 +20,7 @@ public class Biblioteca {
         Lector lector = new Lector("123", "Miguel", "Sanchez", "miguel@gmail.com", "111");
         listaLectores.agregar(lector);
 
-        Libro libro = new Libro("Principito", "Antoine", "1947", "Aventura", false, 0);
+        Libro libro = new Libro("Principito", "Antoine", 1947, "Aventura", false, 0);
         listaLibros.insertar(libro);
     }
 
@@ -69,7 +69,7 @@ public class Biblioteca {
 
     }
 
-    public Libro agregarLibro(String titulo, String autor, String anio, String categoria){
+    public Libro agregarLibro(String titulo, String autor, String anioStr, String categoria){
 
         if (titulo.isEmpty()){
             throw new RuntimeException("El titulo es obligatorio");
@@ -77,14 +77,20 @@ public class Biblioteca {
         if (autor.isEmpty()){
             throw new RuntimeException("El autor es obligatorio");
         }
-        if (anio.isEmpty()){
-            throw new RuntimeException("El año es obligatorio");
+        int anio;
+        try {
+            anio = Integer.parseInt(anioStr);
+            if (anio <= 0) {
+                throw new RuntimeException("El año debe ser un número positivo");
+            }
+        } catch (NumberFormatException e) {
+            throw new RuntimeException("El año debe ser un número válido");
         }
         if (categoria.isEmpty()){
             throw new RuntimeException("La categoria es obligatoria");
         }
 
-        Libro libro = new Libro(titulo, autor, anio,categoria, false, 0);
+        Libro libro = new Libro(titulo, autor,anio,categoria, false, 0);
         listaLibros.insertar(libro);
 
         return libro;

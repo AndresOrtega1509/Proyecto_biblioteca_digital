@@ -11,14 +11,14 @@ public class Libro {
     private boolean prestado;
     private PriorityQueue<Lector> listaDeEspera;
     private String autor;
-    private String anio;
+    private int anio;
     private String categoria;
     private int totalValoraciones;
     private int sumaEstrellas;
     private double calificacionPromedio;
 
 
-    public Libro(String titulo, String autor, String anio, String categoria, boolean estado, double calificacionPromedio) {
+    public Libro(String titulo, String autor, int anio, String categoria, boolean estado, double calificacionPromedio) {
         this.titulo = titulo;
         this.prestado = estado;
         this.autor = autor;
@@ -83,11 +83,11 @@ public class Libro {
         this.autor = autor;
     }
 
-    public String getAnio() {
+    public int getAnio() {
         return anio;
     }
 
-    public void setAnio(String anio) {
+    public void setAnio(int anio) {
         this.anio = anio;
     }
 
