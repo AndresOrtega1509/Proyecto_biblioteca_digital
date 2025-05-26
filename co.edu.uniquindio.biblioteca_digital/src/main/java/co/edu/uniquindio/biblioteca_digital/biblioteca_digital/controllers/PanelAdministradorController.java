@@ -4,12 +4,21 @@ import co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Biblioteca;
 import co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Lector;
 import co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Libro;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import static co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Biblioteca.listaLectores;
+import javafx.stage.Stage;
+
+import java.util.List;
+
+import static co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Biblioteca.listaLibros;
 
 public class PanelAdministradorController {
 
@@ -52,9 +61,11 @@ public class PanelAdministradorController {
     @FXML
     private TableColumn<Libro, String> tcTituloLibro;
 
+    private Libro libroSeleccionado;
+
 
     @FXML
-    public void initializable(){
+    public void initialize(){
         tcCedulaUsuario.setCellValueFactory(CellData -> new SimpleStringProperty(CellData.getValue().getCedula()));
         tcNombreUsuario.setCellValueFactory(CellData -> new SimpleStringProperty(CellData.getValue().getNombre()));
         tcApellidoUsuario.setCellValueFactory(CellData -> new SimpleStringProperty(CellData.getValue().getApellido()));
@@ -62,11 +73,35 @@ public class PanelAdministradorController {
         tcPassWordUsuario.setCellValueFactory(CellData -> new SimpleStringProperty(CellData.getValue().getPassWord()));
 
         tcTituloLibro.setCellValueFactory(CellData -> new SimpleStringProperty(CellData.getValue().getTitulo()));
-       // tcAutorLibro.setCellValueFactory(CellData -> new SimpleStringProperty(CellData.getValue().ge()));
-       // tcAnioLibro.setCellValueFactory(CellData -> new SimpleStringProperty(CellData.getValue().ge()));
-       // tcCategoriaLibro.setCellValueFactory(CellData -> new SimpleStringProperty(CellData.getValue().getCorreo()));
+        tcAutorLibro.setCellValueFactory(CellData -> new SimpleStringProperty(CellData.getValue().getAutor()));
+        tcAnioLibro.setCellValueFactory(CellData -> new SimpleStringProperty(CellData.getValue().getAnio()));
+        tcCategoriaLibro.setCellValueFactory(CellData -> new SimpleStringProperty(CellData.getValue().getCategoria()));
         tcEstadoLibro.setCellValueFactory(CellData -> new SimpleStringProperty(CellData.getValue().getEstado()));
         tcCalificacionPromedioLibro.setCellValueFactory(CellData -> new SimpleStringProperty("" + CellData.getValue().getCalificacionPromedio()));
+
+        mostrarUsuariosTabla();
+        mostrarLibrosTabla();
+
+        listenerSelectionLibro();
+
+    }
+
+    private void listenerSelectionLibro() {
+        tableLibros.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            libroSeleccionado = newSelection;
+            System.out.println(libroSeleccionado);
+        });
+
+    }
+
+    private void mostrarUsuariosTabla() {
+
+    }
+
+    private void mostrarLibrosTabla() {
+        List<Libro> libros = listaLibros.listarLibrosInorden();
+        ObservableList<Libro> librosObservable = FXCollections.observableArrayList(libros);
+        tableLibros.setItems(librosObservable);
     }
 
 
@@ -83,16 +118,28 @@ public class PanelAdministradorController {
     @FXML
     void agregarLibro(ActionEvent event) {
 
+        navegarVentana("/co/edu/uniquindio/biblioteca_digital/biblioteca_digital/crearLibro.fxml",
+                "Administrador - AgregarLibro");
     }
 
     @FXML
     void agregarUsuario(ActionEvent event) {
-
+        navegarVentana("/co/edu/uniquindio/biblioteca_digital/biblioteca_digital/registroUsuario.fxml",
+                "Biblioteca - Registro del usuario");
     }
 
     @FXML
     void eliminarLibro(ActionEvent event) {
 
+        if (libroSeleccionado == null){
+            crearAlerta("Seleccione un libro para eliminarlo", Alert.AlertType.WARNING);
+
+        }else {
+            listaLibros.eliminarPorTitulo(libroSeleccionado.getTitulo());
+            mostrarLibrosTabla();
+            crearAlerta("El libro ha sido eliminado exitosamente", Alert.AlertType.INFORMATION);
+            
+        }
     }
 
     @FXML
@@ -123,5 +170,44 @@ public class PanelAdministradorController {
     @FXML
     void visualizarGrafoLectores(ActionEvent event) {
 
+    }
+
+    public void navegarVentana(String nombreArchivoFxml, String tituloVentana) {
+        try {
+
+            // Cargar la vista
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(nombreArchivoFxml));
+            Parent root = loader.load();
+
+
+            // Crear la escena
+            Scene scene = new Scene(root);
+
+            // Crear un nuevo escenario (ventana)
+            Stage stage = new Stage();
+            stage.setScene(scene);
+            stage.setResizable(false);
+            stage.setTitle(tituloVentana);
+
+            // Mostrar la nueva ventana
+            stage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Método que se encarga de mostrar una alerta en pantalla
+     *
+     * @param mensaje mensaje a mostrar
+     * @param tipo    tipo de alerta
+     */
+    public void crearAlerta(String mensaje, Alert.AlertType tipo) {
+        Alert alert = new Alert(tipo);
+        alert.setTitle("Alerta");
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
     }
 }

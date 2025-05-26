@@ -11,14 +11,20 @@ public class Libro {
     private boolean prestado;
     private PriorityQueue<Lector> listaDeEspera;
     private String autor;
+    private String anio;
+    private String categoria;
     private int totalValoraciones;
     private int sumaEstrellas;
     private double calificacionPromedio;
 
 
-    public Libro(String titulo) {
+    public Libro(String titulo, String autor, String anio, String categoria, boolean estado, double calificacionPromedio) {
         this.titulo = titulo;
-        this.prestado = false;
+        this.prestado = estado;
+        this.autor = autor;
+        this.anio = anio;
+        this.categoria = categoria;
+        this.calificacionPromedio = calificacionPromedio;
         this.listaDeEspera = new PriorityQueue<>(new ComparadorPrioridadUsuario());
     }
 
@@ -69,4 +75,40 @@ public class Libro {
         return prestado ? "prestado" : "disponible";
     }
 
+    public String getAutor() {
+        return autor;
+    }
+
+    public void setAutor(String autor) {
+        this.autor = autor;
+    }
+
+    public String getAnio() {
+        return anio;
+    }
+
+    public void setAnio(String anio) {
+        this.anio = anio;
+    }
+
+    public String getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
+    }
+
+    public void setCalificacionPromedio(double calificacionPromedio) {
+        this.calificacionPromedio = calificacionPromedio;
+    }
+
+    @Override
+    public String toString() {
+        return "titulo: " + titulo + '\n' +
+                "Autor: " + autor + '\n' +
+                "Categoria: " + categoria + '\n' +
+                "Prestado: " + prestado + '\n' +
+                "CalificacionPromedio: " + calificacionPromedio;
+    }
 }

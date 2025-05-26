@@ -9,11 +9,13 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.PriorityQueue;
 
 import static co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.ListaLector.obtenerLectores;
+import static co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Biblioteca.listaLibros;
 
 public class PanelLectorController {
 
@@ -81,10 +83,10 @@ public class PanelLectorController {
     @FXML
     public void initialize() {
         // Crear libros de prueba
-        biblioteca.put("Cien años de soledad", new Libro("Cien años de soledad"));
-        biblioteca.put("1984", new Libro("1984"));
+        //biblioteca.put("Cien años de soledad", new Libro("Cien años de soledad"));
+        //biblioteca.put("1984", new Libro("1984"));
 
-        comboLibros.getItems().addAll(biblioteca.keySet());
+        comboLibros.getItems().addAll(listaLibros.listarLibrosInorden());
 
         comboLibros.setOnAction(e -> {
             boolean libroSeleccionado = comboLibros.getValue() != null;
@@ -106,19 +108,18 @@ public class PanelLectorController {
             mostrarAlerta("No hay usuarios registrados");
         }
 
-        String titulo = comboLibros.getValue();
-        Libro libro = biblioteca.get(titulo);
+        Libro libroSeleccionado = comboLibros.getValue();
 
-        if (libro == null) return;
+        if (libroSeleccionado == null) return;
 
-        if (libro.getEstado().equals("disponible")) {
-            usuarioRegistrado.prestarLibro(libro);
+        if (libroSeleccionado.getEstado().equals("disponible")) {
+            usuarioRegistrado.prestarLibro(libroSeleccionado);
             mostrarAlerta("Libro prestado con éxito.");
             mostrarLibrosDisponibles();
             actualizarHistorial();
         } else {
-            libro.getListaDeEspera().add(usuarioRegistrado);
-            mostrarAlerta("El libro ya está prestado. Has sido agregado a la cola de espera. Tu posición: " + libro.getListaDeEspera().size());
+            libroSeleccionado.getListaDeEspera().add(usuarioRegistrado);
+            mostrarAlerta("El libro ya está prestado. Has sido agregado a la cola de espera. Tu posición: " + libroSeleccionado.getListaDeEspera().size());
         }
 
     }
@@ -127,18 +128,17 @@ public class PanelLectorController {
     public void handleValorarLibro() {
         if (usuarioRegistrado == null)  mostrarAlerta("No hay usuarios registrados");
 
-        String titulo = comboLibros.getValue();
-        Libro libro = biblioteca.get(titulo);
+        Libro libroSeleccionado = comboLibros.getValue();
 
-        if (libro == null) return;
+        if (libroSeleccionado == null) return;
 
         ChoiceDialog<Integer> dialog = new ChoiceDialog<>(5, 1, 2, 3, 4, 5);
         dialog.setTitle("Valoración");
-        dialog.setHeaderText("Selecciona la puntuación para: " + titulo);
+        dialog.setHeaderText("Selecciona la puntuación para: " + libroSeleccionado.getTitulo());
         dialog.setContentText("Estrellas:");
 
         dialog.showAndWait().ifPresent(puntaje -> {
-            usuarioRegistrado.valorarLibro(libro, puntaje);
+            usuarioRegistrado.valorarLibro(libroSeleccionado, puntaje);
             mostrarAlerta("Valoración registrada: " + puntaje + " estrellas");
         });
 
@@ -146,17 +146,17 @@ public class PanelLectorController {
 
     @FXML
     public void handleConsultarListaEspera() {
-        String titulo = comboLibros.getValue(); // Usamos el ComboBox
-        Libro libro = biblioteca.get(titulo);
 
-        if (libro != null) {
+        Libro libroSeleccionado = comboLibros.getValue();
+
+        if (libroSeleccionado != null) {
             StringBuilder sb = new StringBuilder();
-            sb.append("Lista de espera para \"").append(titulo).append("\":\n");
+            sb.append("Lista de espera para \"").append(libroSeleccionado.getTitulo()).append("\":\n");
 
             int pos = 1;
             int miPos = -1;
 
-            for (Lector u : libro.getListaDeEspera()) {
+            for (Lector u : libroSeleccionado.getListaDeEspera()) {
                 sb.append(pos).append(". ").append(u.getNombre()).append(" (ID: ").append(u.getCedula()).append(")\n");
 
                 // Comparamos por ID
@@ -233,7 +233,7 @@ public class PanelLectorController {
         areaLibrosDisponibles.setText(sb.toString());
     }
     @FXML
-    private ComboBox<String> comboLibros;
+    private ComboBox<Libro> comboLibros;
 
     @FXML private Button btnPrestar, btnValorar, btnConsultarCola, btnHistorial;
 
