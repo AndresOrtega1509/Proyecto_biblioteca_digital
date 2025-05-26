@@ -349,7 +349,7 @@ if(LibroPrestado==null) {
         mostrarAlerta("Usuario registrado con éxito: " + usuario.getNombre());
     }
     public void inicializarValores(Lector usuario) {
-        this.usuarioRegistrado = usuario;
+        //this.usuarioRegistrado = usuario;
     }
 
 
