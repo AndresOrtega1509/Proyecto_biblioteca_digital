@@ -113,37 +113,29 @@ public class PanelLectorController {
             mostrarAlerta("No hay usuarios registrados");
         }
 
-        Libro libroSeleccionado = comboLibros.getValue();
+        Libro libro = comboLibros.getValue();
 
-        if (libroSeleccionado == null) return;
 
-        if (libroSeleccionado.getEstado().equals("disponible")) {
-            usuarioRegistrado.prestarLibro(libroSeleccionado);
-            mostrarAlerta("Libro prestado con éxito.");
-            mostrarLibrosDisponibles();
-            actualizarHistorial();
+        if (libro == null) return;
+
+        String LibroPrestado = listaLectores.recorrerLectores(libro);
+
+        if (LibroPrestado == null) {
+            if (libro.getEstado().equals("disponible")) {
+                usuarioRegistrado.prestarLibro(libro);
+                mostrarAlerta("Libro prestado con éxito.");
+                mostrarLibrosDisponiblesDspuesDePrestar();
+                actualizarHistorial();
+
+            } else {
+                libro.getListaDeEspera().add(usuarioRegistrado);
+                mostrarAlerta("El libro ya está prestado. Has sido agregado a la cola de espera. Tu posición: " + libro.getListaDeEspera().size());
+            }
         } else {
-            libroSeleccionado.getListaDeEspera().add(usuarioRegistrado);
-            mostrarAlerta("El libro ya está prestado. Has sido agregado a la cola de espera. Tu posición: " + libroSeleccionado.getListaDeEspera().size());
+            libro.getListaDeEspera().add(usuarioRegistrado);
+            mostrarAlerta("El libro ya está prestado al lector: " + LibroPrestado + " Has sido agregado a la cola de espera. Tu posición: " + libro.getListaDeEspera().size());
+
         }
-        String LibroPrestado = listaLectores.recorrerLectores(libroSeleccionado);
-
-    if(LibroPrestado==null) {
-    if (libroSeleccionado.getEstado().equals("disponible")) {
-        usuarioRegistrado.prestarLibro(libroSeleccionado);
-        mostrarAlerta("Libro prestado con éxito.");
-        mostrarLibrosDisponiblesDspuesDePrestar();
-        actualizarHistorial();
-
-    } else {
-        libroSeleccionado.getListaDeEspera().add(usuarioRegistrado);
-        mostrarAlerta("El libro ya está prestado. Has sido agregado a la cola de espera. Tu posición: " + libroSeleccionado.getListaDeEspera().size());
-    }
-    }else {
-    libroSeleccionado.getListaDeEspera().add(usuarioRegistrado);
-    mostrarAlerta("El libro ya está prestado al lector: "+ LibroPrestado  +" Has sido agregado a la cola de espera. Tu posición: " + libroSeleccionado.getListaDeEspera().size());
-
-    }
         mostrarLibrosDisponibles();
 
     }

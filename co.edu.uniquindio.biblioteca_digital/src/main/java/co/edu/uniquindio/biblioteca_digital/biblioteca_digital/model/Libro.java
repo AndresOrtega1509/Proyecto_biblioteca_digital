@@ -71,8 +71,45 @@ public class Libro {
         this.listaDeEspera = listaDeEspera;
     }
 
+    public String getAutor() {
+        return autor;
+    }
+
+    public void setAutor(String autor) {
+        this.autor = autor;
+    }
+
+    public int getAnio() {
+        return anio;
+    }
+
+    public void setAnio(int anio) {
+        this.anio = anio;
+    }
+
+    public String getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
+    }
+
+    public void setCalificacionPromedio(double calificacionPromedio) {
+        this.calificacionPromedio = calificacionPromedio;
+    }
+
     public String getEstado() {
         return prestado ? "prestado" : "disponible";
     }
 
+    @Override
+    public String toString() {
+        return "Titulo: " + titulo + '\n' +
+                "Autor: " + autor + '\n' +
+                "Año: " + anio + '\n' +
+                "Categoria: " + categoria + '\n' +
+                "Prestado: " + prestado + '\n' +
+                "CalificacionPromedio: " + calificacionPromedio;
+    }
 }

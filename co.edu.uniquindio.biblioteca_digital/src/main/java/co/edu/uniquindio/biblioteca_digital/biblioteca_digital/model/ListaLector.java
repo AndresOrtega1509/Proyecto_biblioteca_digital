@@ -63,7 +63,8 @@ public class ListaLector {
             List<Prestamo> historial = actual.getLector().getHistorialPrestamos();
 
             for (Prestamo prestamo : historial) {
-                if (prestamo.getLibro().getTitulo().equalsIgnoreCase(libro.getTitulo())) {
+                if (prestamo.getLibro().getTitulo().equalsIgnoreCase(libro.getTitulo()) &&
+                        prestamo.getLibro().getEstado().equalsIgnoreCase("prestado")) {
                     return actual.getLector().getNombre(); // Devuelve el nombre del lector que prestó el libro
                 }
             }

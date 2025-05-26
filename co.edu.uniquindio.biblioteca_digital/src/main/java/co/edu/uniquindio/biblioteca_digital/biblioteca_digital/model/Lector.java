@@ -123,4 +123,6 @@ public class Lector {
             libro.agregarAListaDeEspera(this);
         }
     }
+
+
 }
