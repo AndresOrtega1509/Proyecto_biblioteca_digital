@@ -46,6 +46,8 @@ public class PanelLectorController {
                         .toList()
         );
         iniciarCliente();
+        mostrarLibrosDisponibles();
+
     }
 
     private DataOutputStream flujoSalida;
@@ -99,7 +101,7 @@ public class PanelLectorController {
             btnHistorial.setDisable(!libroSeleccionado);
         });
 
-        mostrarLibrosDisponibles();
+        //mostrarLibrosDisponibles();
 
 
 
@@ -124,6 +126,25 @@ public class PanelLectorController {
             libroSeleccionado.getListaDeEspera().add(usuarioRegistrado);
             mostrarAlerta("El libro ya está prestado. Has sido agregado a la cola de espera. Tu posición: " + libroSeleccionado.getListaDeEspera().size());
         }
+        String LibroPrestado = listaLectores.recorrerLectores(libroSeleccionado);
+
+    if(LibroPrestado==null) {
+    if (libroSeleccionado.getEstado().equals("disponible")) {
+        usuarioRegistrado.prestarLibro(libroSeleccionado);
+        mostrarAlerta("Libro prestado con éxito.");
+        mostrarLibrosDisponiblesDspuesDePrestar();
+        actualizarHistorial();
+
+    } else {
+        libroSeleccionado.getListaDeEspera().add(usuarioRegistrado);
+        mostrarAlerta("El libro ya está prestado. Has sido agregado a la cola de espera. Tu posición: " + libroSeleccionado.getListaDeEspera().size());
+    }
+    }else {
+    libroSeleccionado.getListaDeEspera().add(usuarioRegistrado);
+    mostrarAlerta("El libro ya está prestado al lector: "+ LibroPrestado  +" Has sido agregado a la cola de espera. Tu posición: " + libroSeleccionado.getListaDeEspera().size());
+
+    }
+        mostrarLibrosDisponibles();
 
     }
 
@@ -229,10 +250,64 @@ public class PanelLectorController {
     }
 
     private void mostrarLibrosDisponibles() {
+
         StringBuilder sb = new StringBuilder();
-        biblioteca.values().forEach(libro -> {
-            sb.append("- ").append(libro.getTitulo()).append(" (").append(libro.getEstado()).append(")\n");
-        });
+        obtenerLectores().iterator();
+        Lector librosDisponiblesLector;
+        Libro estadoLibroActual;
+        if (listaLectores.getTamanio()>1){
+            mostrarLibrosDisponiblesDspuesDePrestar();
+        }else {
+            biblioteca.values().forEach(libro -> {
+                sb.append("- ").append(libro.getTitulo()).append(" (").append(libro.getEstado()).append(")\n");
+            });
+            areaLibrosDisponibles.setText(sb.toString());
+        }
+    }
+
+    private void mostrarLibrosDisponiblesDspuesDePrestar() {
+        StringBuilder sb = new StringBuilder();
+        areaLibrosDisponibles.setText("");
+
+        obtenerLectores().iterator();
+        Lector librosDisponiblesLector;
+        Libro estadoLibroActual;
+        Boolean hayPrestados= false;
+
+        for (int i = 0 ; i <obtenerLectores().size(); i++){
+            librosDisponiblesLector = obtenerLectores().get(i);
+            if(librosDisponiblesLector.getHistorialPrestamos().size()!= 0) {
+                for (int j=0; j< librosDisponiblesLector.getHistorialPrestamos().size();j++) {
+                    estadoLibroActual = librosDisponiblesLector.getHistorialPrestamos().get(j).getLibro();
+                    if (estadoLibroActual.getEstado().trim().equalsIgnoreCase("prestado")) {
+
+                        Libro finalEstadoLibroActual = estadoLibroActual;
+                        int finalJ = j;
+                        biblioteca.values().forEach(libro -> {
+                            if(libro.getTitulo().equals(finalEstadoLibroActual.getTitulo())){
+                                sb.append("- ").append(finalEstadoLibroActual.getTitulo()).append(" (").append(finalEstadoLibroActual.getEstado()).append(")\n");
+
+                            }
+                        });
+                        hayPrestados = true;
+                    }
+                }
+            }else {
+
+                if (!hayPrestados && obtenerLectores().size()==i+1){
+
+                    biblioteca.values().forEach(libro -> {
+                        sb.append("- ").append(libro.getTitulo()).append(" (").append(libro.getEstado()).append(")\n");
+                    });
+
+                    areaLibrosDisponibles.setText(sb.toString());
+                }
+
+            }
+        }
+
+
+
         areaLibrosDisponibles.setText(sb.toString());
     }
     @FXML
