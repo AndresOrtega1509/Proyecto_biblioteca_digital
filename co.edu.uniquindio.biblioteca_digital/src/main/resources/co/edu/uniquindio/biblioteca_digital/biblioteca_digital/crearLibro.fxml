@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="co.edu.uniquindio.biblioteca_digital.biblioteca_digital.controllers.CrearLibroController"
+      prefHeight="400.0" prefWidth="400.0" alignment="center" spacing="30.0" >
+
+    <Label text="Agregar nuevo libro" >
+        <font>
+            <Font size="18.0" />
+        </font>
+    </Label>
+
+    <GridPane alignment="CENTER" hgap="10.0" vgap="10.0">
+        <Label text="Titulo:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+        <TextField fx:id="txtTitulo" GridPane.columnIndex="1" GridPane.rowIndex="0" minHeight="30.0" />
+
+        <Label text="Autor:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+        <TextField fx:id="txtAutor" GridPane.columnIndex="1" GridPane.rowIndex="1" minHeight="30.0" />
+
+        <Label text="Año:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+        <TextField fx:id="txtAnio" GridPane.columnIndex="1" GridPane.rowIndex="2" minHeight="30.0" />
+
+        <Label text="Categoria:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+        <TextField fx:id="txtCategoria" GridPane.columnIndex="1" GridPane.rowIndex="3" minHeight="30.0" />
+
+    </GridPane>
+
+    <Button text="Agregar Libro" onAction="#agregarLibro" minHeight="40.0" minWidth="130.0" style="-fx-background-color: #00807a; -fx-text-fill: white" />
+
+</VBox>

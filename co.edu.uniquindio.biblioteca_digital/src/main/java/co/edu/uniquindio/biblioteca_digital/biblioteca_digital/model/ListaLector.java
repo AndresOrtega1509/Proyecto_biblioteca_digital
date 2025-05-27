@@ -55,4 +55,45 @@ public class ListaLector {
 
         return lectores;
     }
+
+    public String recorrerLectores(Libro libro){
+        NodoLector actual = nodoPrimero;
+
+        while (actual != null) {
+            List<Prestamo> historial = actual.getLector().getHistorialPrestamos();
+
+            for (Prestamo prestamo : historial) {
+                if (prestamo.getLibro().getTitulo().equalsIgnoreCase(libro.getTitulo()) &&
+                        prestamo.getLibro().getEstado().equalsIgnoreCase("prestado")) {
+                    return actual.getLector().getNombre(); // Devuelve el nombre del lector que prestó el libro
+                }
+            }
+
+            actual = actual.getNodoSiguiente();
+        }
+
+        return null; // Si ningún lector ha prestado el libro
+    }
+
+    public boolean eliminar(String cedula) {
+        if (nodoPrimero == null) return false;
+
+        if (nodoPrimero.getLector().getCedula().equalsIgnoreCase(cedula)) {
+            nodoPrimero = nodoPrimero.getNodoSiguiente();
+            tamanio--;
+            return true;
+        }
+
+        NodoLector actual = nodoPrimero;
+        while (actual.getNodoSiguiente() != null) {
+            if (actual.getNodoSiguiente().getLector().getCedula().equalsIgnoreCase(cedula)) {
+                actual.setNodoSiguiente(actual.getNodoSiguiente().getNodoSiguiente());
+                tamanio--;
+                return true;
+            }
+            actual = actual.getNodoSiguiente();
+        }
+
+        return false;
+    }
 }

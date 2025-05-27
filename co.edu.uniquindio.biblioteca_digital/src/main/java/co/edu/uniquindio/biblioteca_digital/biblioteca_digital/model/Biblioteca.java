@@ -5,11 +5,13 @@ package co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model;
 public class Biblioteca {
 
     public static ListaLector listaLectores;
+    public static ArbolLibros listaLibros;
     public static Biblioteca INSTANCIA;
     private final Sesion sesion = Sesion.getInstancia();
 
     public Biblioteca(){
         listaLectores = new ListaLector();
+        listaLibros = new ArbolLibros();
         cargarDatosPrueba();
     }
 
@@ -17,6 +19,9 @@ public class Biblioteca {
 
         Lector lector = new Lector("123", "Miguel", "Sanchez", "miguel@gmail.com", "111");
         listaLectores.agregar(lector);
+
+        Libro libro = new Libro("Principito", "Antoine", 1947, "Aventura", false, 0);
+        listaLibros.insertar(libro);
     }
 
     public Lector registrarLector(String cedula, String nombre, String apellido, String correo, String passWord){
@@ -64,6 +69,34 @@ public class Biblioteca {
 
     }
 
+    public Libro agregarLibro(String titulo, String autor, String anioStr, String categoria){
+
+        if (titulo.isEmpty()){
+            throw new RuntimeException("El titulo es obligatorio");
+        }
+        if (autor.isEmpty()){
+            throw new RuntimeException("El autor es obligatorio");
+        }
+        int anio;
+        try {
+            anio = Integer.parseInt(anioStr);
+            if (anio <= 0) {
+                throw new RuntimeException("El año debe ser un número positivo");
+            }
+        } catch (NumberFormatException e) {
+            throw new RuntimeException("El año debe ser un número válido");
+        }
+        if (categoria.isEmpty()){
+            throw new RuntimeException("La categoria es obligatoria");
+        }
+
+        Libro libro = new Libro(titulo, autor,anio,categoria, false, 0);
+        listaLibros.insertar(libro);
+
+        return libro;
+
+    }
+
     /**
      * Metodo que se encarga de obtener la instancia de la Biblioteca
      * @return
@@ -74,6 +107,5 @@ public class Biblioteca {
         }
         return INSTANCIA;
     }
-
 
 }

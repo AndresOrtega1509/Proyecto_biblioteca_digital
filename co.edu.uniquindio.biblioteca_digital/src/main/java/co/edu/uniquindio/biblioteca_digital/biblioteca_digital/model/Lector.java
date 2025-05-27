@@ -113,4 +113,16 @@ public class Lector {
         }
     }
 
+    public void devolverLibro(Libro libro) {
+        if (!libro.estaDisponible()) {
+            libro.setPrestado(false);
+            historialPrestamos.add(new Prestamo(libro));
+            listaLectores.buscarLector(cedula).setHistorialPrestamos(historialPrestamos);
+            System.out.println(nombre + " ha devuelto el libro: " + libro.getTitulo());
+        } else {
+            libro.agregarAListaDeEspera(this);
+        }
+    }
+
+
 }

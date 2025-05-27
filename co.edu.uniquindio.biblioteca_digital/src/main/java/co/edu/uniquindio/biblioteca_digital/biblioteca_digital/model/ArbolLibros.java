@@ -1,5 +1,11 @@
 package co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class ArbolLibros {
 
     private NodoLibroArbol raiz;
@@ -84,4 +90,66 @@ public class ArbolLibros {
             imprimirRec(nodo.derecha);
         }
     }
+
+    public List<Libro> listarLibrosInorden() {
+        List<Libro> libros = new ArrayList<>();
+        llenarListaInorden(raiz, libros);
+        return libros;
+    }
+
+    private void llenarListaInorden(NodoLibroArbol nodo, List<Libro> lista) {
+        if (nodo != null) {
+            llenarListaInorden(nodo.izquierda, lista);
+            lista.add(nodo.libro);
+            llenarListaInorden(nodo.derecha, lista);
+        }
+    }
+
+    public void eliminarPorTitulo(String titulo) {
+        raiz = eliminarRec(raiz, titulo);
+    }
+
+
+    private NodoLibroArbol eliminarRec(NodoLibroArbol nodo, String titulo) {
+        if (nodo == null) {
+            return null; // Libro no encontrado
+        }
+
+        int comparacion = titulo.compareToIgnoreCase(nodo.libro.getTitulo());
+
+        if (comparacion < 0) {
+            nodo.izquierda = eliminarRec(nodo.izquierda, titulo);
+        } else if (comparacion > 0) {
+            nodo.derecha = eliminarRec(nodo.derecha, titulo);
+        } else {
+            // CASO 1: sin hijos
+            if (nodo.izquierda == null && nodo.derecha == null) {
+                return null;
+            }
+
+            // CASO 2: un solo hijo
+            if (nodo.izquierda == null) {
+                return nodo.derecha;
+            }
+            if (nodo.derecha == null) {
+                return nodo.izquierda;
+            }
+
+            // CASO 3: dos hijos — reemplazar por el menor del subárbol derecho
+            NodoLibroArbol sucesor = encontrarMinimo(nodo.derecha);
+            nodo.libro = sucesor.libro; // reemplazamos solo el contenido
+            nodo.derecha = eliminarRec(nodo.derecha, sucesor.libro.getTitulo());
+        }
+
+        return nodo;
+    }
+
+    private NodoLibroArbol encontrarMinimo(NodoLibroArbol nodo) {
+        while (nodo.izquierda != null) {
+            nodo = nodo.izquierda;
+        }
+        return nodo;
+    }
+
+
 }

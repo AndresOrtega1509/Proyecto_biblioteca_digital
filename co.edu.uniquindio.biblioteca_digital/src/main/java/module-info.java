@@ -13,4 +13,7 @@ module co.edu.uniquindio.biblioteca_digital.biblioteca_digital {
     exports co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model;
     opens co.edu.uniquindio.biblioteca_digital.biblioteca_digital.controllers;
 
+    exports co.edu.uniquindio.biblioteca_digital.biblioteca_digital.controllers.observador;
+    opens co.edu.uniquindio.biblioteca_digital.biblioteca_digital.controllers.observador;
+
 }

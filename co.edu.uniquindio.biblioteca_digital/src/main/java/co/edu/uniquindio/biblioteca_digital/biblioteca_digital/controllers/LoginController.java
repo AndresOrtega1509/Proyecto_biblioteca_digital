@@ -32,6 +32,14 @@ public class LoginController {
     public void logiarse(ActionEvent actionEvent) {
 
         try {
+
+            if (txtCedula.getText().equalsIgnoreCase("333")
+                    && txtPassword.getText().equalsIgnoreCase("333")){
+                navegarVentanaAdm("/co/edu/uniquindio/biblioteca_digital/biblioteca_digital/panelAdministrador.fxml",
+                        "Biblioteca - Panel Administrador");
+                return;
+            }
+
             Lector usuario = biblioteca.iniciarSesion(
                     txtCedula.getText(),
                     txtPassword.getText());
@@ -92,6 +100,32 @@ public class LoginController {
             controller.inicializarValores(usuario);
 
             controller.inicializarUsuario(usuario);
+
+            // Crear la escena
+            Scene scene = new Scene(root);
+
+            // Crear un nuevo escenario (ventana)
+            Stage stage = new Stage();
+            stage.setScene(scene);
+            stage.setResizable(false);
+            stage.setTitle(tituloVentana);
+
+            // Mostrar la nueva ventana
+            stage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void navegarVentanaAdm(String nombreArchivoFxml, String tituloVentana) {
+
+        try {
+
+            // Cargar la vista
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(nombreArchivoFxml));
+            Parent root = loader.load();
+
 
             // Crear la escena
             Scene scene = new Scene(root);
