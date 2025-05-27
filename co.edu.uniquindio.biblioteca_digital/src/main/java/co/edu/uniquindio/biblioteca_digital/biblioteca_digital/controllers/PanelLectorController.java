@@ -10,10 +10,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.PriorityQueue;
+import java.util.*;
 
 import static co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Biblioteca.listaLectores;
 import static co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.ListaLector.obtenerLectores;
@@ -21,12 +18,17 @@ import static co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Bibl
 
 public class PanelLectorController {
 
+    public TextArea areaLibrosPrestados;
     @FXML
     private TextField txtNombre, txtId, txtTituloPrestamo, txtTituloValoracion, txtEstrellas;
     @FXML private TextArea areaHistorial, areaLibrosDisponibles, areaListaEspera;
     @FXML private TextField txtTituloConsultaEspera, txtNombreEspera, txtIdEspera;
     @FXML
     private Label labelUsuario;
+
+    //@FXML private ComboBox<Libro> comboLibros;
+    @FXML private TextField txtBuscar;
+    @FXML private ComboBox<String> comboCriterio;
 
     String receptorSelect;
     private Lector usuario;
@@ -100,12 +102,60 @@ public class PanelLectorController {
             btnConsultarCola.setDisable(!libroSeleccionado);
             btnHistorial.setDisable(!libroSeleccionado);
         });
+        comboCriterio.getItems().addAll("Título", "Autor", "Categoría");
 
         //mostrarLibrosDisponibles();
 
 
 
     }
+    @FXML
+    public void handleBuscarLibro() {
+        String criterio = comboCriterio.getValue();
+        String textoBusqueda = txtBuscar.getText().toLowerCase();
+
+        if (criterio == null || textoBusqueda.isBlank()) {
+            mostrarAlerta("Debe seleccionar un criterio y escribir un texto de búsqueda.");
+            return;
+        }
+
+        List<Libro> resultados = new ArrayList<>();
+
+        for (Libro libro : listaLibros.listarLibrosInorden()) {
+            switch (criterio) {
+                case "Título" -> {
+                    if (libro.getTitulo().toLowerCase().contains(textoBusqueda)) {
+                        resultados.add(libro);
+                    }
+                }
+                case "Autor" -> {
+                    if (libro.getAutor().toLowerCase().contains(textoBusqueda)) {
+                        resultados.add(libro);
+                    }
+                }
+                case "Categoría" -> {
+                    if (libro.getCategoria().toLowerCase().contains(textoBusqueda)) {
+                        resultados.add(libro);
+                    }
+                }
+            }
+        }
+
+        if (resultados.isEmpty()) {
+            mostrarAlerta("No se encontraron libros que coincidan con la búsqueda.");
+        } else {
+            // Mostrar resultados (puedes mostrarlos donde prefieras)
+            StringBuilder sb = new StringBuilder("Resultados de la búsqueda:\n");
+            for (Libro libro : resultados) {
+                sb.append("- ").append(libro.getTitulo()).append(" (").append(libro.getAutor()).append(")\n");
+            }
+            areaLibrosDisponibles.setText(sb.toString());
+
+            // Selecciona el primer resultado en el ComboBox
+            comboLibros.setValue(resultados.get(0));
+        }
+    }
+
 
     @FXML
     public void handlePrestarLibro() {

@@ -52,13 +52,13 @@ public class ArbolLibros {
     }
 
     private void buscarRecAutor(NodoLibroArbol nodo, String autor, ListaLibros resultado) {
-        //   if (nodo != null) {
-        //     buscarRecAutor(nodo.izquierda, autor, resultado);
-        //   if (nodo.libro.getAutor().toLowerCase().contains(autor)) {
-        //      resultado.agregar(nodo.libro);
-        //   }
-        //    buscarRecAutor(nodo.derecha, autor, resultado);
-        // }
+           if (nodo != null) {
+             buscarRecAutor(nodo.izquierda, autor, resultado);
+           if (nodo.libro.getAutor().toLowerCase().contains(autor)) {
+              resultado.agregar(nodo.libro);
+           }
+            buscarRecAutor(nodo.derecha, autor, resultado);
+         }
     }
 
     // Busca libros por categoría (puede haber varios)
@@ -69,13 +69,13 @@ public class ArbolLibros {
     }
 
     private void buscarRecCategoria(NodoLibroArbol nodo, String categoria, ListaLibros resultado) {
-       // if (nodo != null) {
-        //     buscarRecCategoria(nodo.izquierda, categoria, resultado);
-        //    if (nodo.libro.getCategoria().toLowerCase().contains(categoria)) {
-        //        resultado.agregar(nodo.libro);
-        //    }
-        //    buscarRecCategoria(nodo.derecha, categoria, resultado);
-        //  }
+        if (nodo != null) {
+             buscarRecCategoria(nodo.izquierda, categoria, resultado);
+            if (nodo.libro.getCategoria().toLowerCase().contains(categoria)) {
+                resultado.agregar(nodo.libro);
+            }
+            buscarRecCategoria(nodo.derecha, categoria, resultado);
+          }
     }
 
     // Imprime todos los libros en orden alfabético (inorden)

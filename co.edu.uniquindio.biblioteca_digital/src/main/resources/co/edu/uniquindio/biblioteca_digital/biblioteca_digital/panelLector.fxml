@@ -13,6 +13,12 @@
     <Label text="Seleccionar Libro"/>
     <ComboBox fx:id="comboLibros" promptText="Seleccione un libro"/>
 
+    <HBox spacing="5" alignment="CENTER_LEFT">
+        <TextField fx:id="txtBuscar" promptText="Buscar..." />
+        <ComboBox fx:id="comboCriterio" promptText="Criterio" />
+        <Button text="Buscar" onAction="#handleBuscarLibro"/>
+    </HBox>
+
     <HBox spacing="10">
         <Button text="Prestar libro" fx:id="btnPrestar" onAction="#handlePrestarLibro" disable="true"/>
         <Button text="devolver libro" fx:id="btndevolver" onAction="#handleDevolverLibro" disable="true"/>
