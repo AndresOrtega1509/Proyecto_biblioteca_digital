@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="co.edu.uniquindio.biblioteca_digital.biblioteca_digital.controllers.EstadisticaPrestamosLectorController">
+    <top>
+        <VBox spacing="10" alignment="CENTER">
+            <padding>
+                <Insets top="15" right="15" bottom="15" left="15"/>
+            </padding>
+            <Label text="Cantidad de préstamos por lector" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+        </VBox>
+    </top>
+
+    <center>
+        <BarChart fx:id="graficoPrestamos"
+                  title="Préstamos por lector"
+                  categoryGap="20"
+                  barGap="5">
+            <xAxis>
+                <CategoryAxis label="Lector"/>
+            </xAxis>
+            <yAxis>
+                <NumberAxis label="Cantidad de préstamos"/>
+            </yAxis>
+        </BarChart>
+    </center>
+</BorderPane>
+

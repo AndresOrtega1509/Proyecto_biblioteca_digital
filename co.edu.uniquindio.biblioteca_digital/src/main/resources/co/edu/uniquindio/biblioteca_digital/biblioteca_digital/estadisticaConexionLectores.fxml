@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="co.edu.uniquindio.biblioteca_digital.biblioteca_digital.controllers.EstadisticaConexionesController">
+
+    <top>
+        <Label text="Lectores con más conexiones"
+               style="-fx-font-size: 18px; -fx-font-weight: bold;"
+               BorderPane.alignment="CENTER"/>
+    </top>
+
+    <center>
+        <BarChart fx:id="barChart"
+                  title="Conexiones por lector"
+                  categoryGap="10"
+                  barGap="5">
+            <xAxis>
+                <CategoryAxis label="Lectores"/>
+            </xAxis>
+            <yAxis>
+                <NumberAxis label="Cantidad de Conexiones"/>
+            </yAxis>
+        </BarChart>
+    </center>
+
+</BorderPane>
+

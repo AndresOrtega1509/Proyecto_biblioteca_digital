@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="co.edu.uniquindio.biblioteca_digital.biblioteca_digital.controllers.EstadisticaClustersController">
+
+    <top>
+        <VBox spacing="10">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <Label text="Estadística: Clústeres de Afinidad entre Lectores" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+            <Button text="Detectar clústeres" onAction="#handleDetectarClusters"/>
+        </VBox>
+    </top>
+
+    <center>
+        <ListView fx:id="listaClusters"/>
+    </center>
+
+</BorderPane>
+

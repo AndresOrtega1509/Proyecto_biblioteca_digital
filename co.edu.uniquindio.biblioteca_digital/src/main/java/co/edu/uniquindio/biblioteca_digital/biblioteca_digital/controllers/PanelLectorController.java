@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.*;
 
+
 //import static co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Biblioteca.listaLibros;
 
 //import static co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Biblioteca.listaLectores;
@@ -282,16 +283,23 @@ public class PanelLectorController {
 
     private void actualizarHistorial() {
         StringBuilder sb = new StringBuilder();
-        usuarioRegistrado.getHistorialPrestamos().forEach(p ->
-                sb.append("- ").append(p.getLibro().getTitulo()).append(" (").append(p.getFecha()).append(")\n")
-        );
-        areaHistorial.setText(sb.toString());
-    }
 
-    private void mostrarAlerta(String mensaje) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setContentText(mensaje);
-        alert.showAndWait();
+        List<Prestamo> historial = usuarioRegistrado.getHistorialPrestamos();
+
+        // Verifica que haya al menos un préstamo
+        if (!historial.isEmpty()) {
+            Prestamo ultimo = historial.get(historial.size() - 1); // Solo el último préstamo
+            String estado = ultimo.getLibro().getEstado();
+            if(ultimo.getLibro().getEstado() == "disponible"){
+                estado = "devuelto";
+            }
+
+            // Construir la nueva línea
+            String nuevaLinea = "- " + ultimo.getLibro().getTitulo() + " (" + ultimo.getFecha() + ") " + estado+ "\n";
+
+            // Agregar la nueva línea sin borrar el contenido anterior
+            areaHistorial.setText(areaHistorial.getText() + nuevaLinea);
+        }
     }
 
     private void mostrarLibrosDisponibles() {
@@ -303,7 +311,7 @@ public class PanelLectorController {
         if (clasePrincipal.listaLectores.getTamanio()>1){
             mostrarLibrosDisponiblesDspuesDePrestar();
         }else {
-            biblioteca.values().forEach(libro -> {
+            clasePrincipal.listaLibros.listarLibrosInorden().forEach(libro ->{
                 sb.append("- ").append(libro.getTitulo()).append(" (").append(libro.getEstado()).append(")\n");
             });
             areaLibrosDisponibles.setText(sb.toString());
@@ -328,7 +336,7 @@ public class PanelLectorController {
 
                         Libro finalEstadoLibroActual = estadoLibroActual;
                         int finalJ = j;
-                        biblioteca.values().forEach(libro -> {
+                        clasePrincipal.listaLibros.listarLibrosInorden().forEach(libro -> {
                             if(libro.getTitulo().equals(finalEstadoLibroActual.getTitulo())){
                                 sb.append("- ").append(finalEstadoLibroActual.getTitulo()).append(" (").append(finalEstadoLibroActual.getEstado()).append(")\n");
 
@@ -341,7 +349,7 @@ public class PanelLectorController {
 
                 if (!hayPrestados && clasePrincipal.listaLectores.obtenerLectores().size()==i+1){
 
-                    biblioteca.values().forEach(libro -> {
+                    clasePrincipal.listaLibros.listarLibrosInorden().forEach(libro -> {
                         sb.append("- ").append(libro.getTitulo()).append(" (").append(libro.getEstado()).append(")\n");
                     });
 
@@ -370,18 +378,15 @@ public class PanelLectorController {
         System.out.println("Historial size: " + usuarioRegistrado.getHistorialPrestamos().size()); // DEBUG
 
         StringBuilder sb = new StringBuilder();
-
+        String historial = areaHistorial.getText();
+        String mensaje ="";
         if (usuarioRegistrado.getHistorialPrestamos().isEmpty()) {
             sb.append("Aún no tienes libros en el historial de préstamos.");
         } else {
-            sb.append("Historial de préstamos de ").append(usuarioRegistrado.getNombre()).append(":\n\n");
-            for (Prestamo prestamo : usuarioRegistrado.getHistorialPrestamos()) {
-                sb.append("- ").append(prestamo.getLibro().getTitulo())
-                        .append(" (").append(prestamo.getFecha()).append(")\n");
-            }
+            mensaje= "Historial de préstamos de ".concat(usuarioRegistrado.getNombre()).concat(":\n\n").concat(historial);
         }
 
-        areaHistorial.setText(sb.toString());
+        areaHistorial.setText(mensaje);
     }
 
     @FXML
@@ -535,5 +540,13 @@ public class PanelLectorController {
         Stage stage = (Stage) btnPrestar.getScene().getWindow();
         sesion.cerrarSesion();
         stage.close();
+    }
+
+    public void mostrarAlerta(String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Alerta");
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
     }
 }

@@ -114,7 +114,8 @@ public class PanelAdministradorController implements ObservableLibros {
 
     @FXML
     void GenerarEstLectoresMayorConexiones(ActionEvent event) {
-
+        navegarVentana("/co/edu/uniquindio/biblioteca_digital/biblioteca_digital/estadisticaConexionLectores.fxml",
+                "Administrador - Estadistica Mayores Conexiones");
     }
 
     @FXML
@@ -239,17 +240,20 @@ public class PanelAdministradorController implements ObservableLibros {
 
     @FXML
     void generarEstCaminosCortos(ActionEvent event) {
-
+        navegarVentana("/co/edu/uniquindio/biblioteca_digital/biblioteca_digital/estadisticaCaminoCortoLectores.fxml",
+                "Administrador - Estadistica Camino Corto");
     }
 
     @FXML
     void generarEstCantidadPrestamosLector(ActionEvent event) {
-
+        navegarVentana("/co/edu/uniquindio/biblioteca_digital/biblioteca_digital/estadisticaPrestamosPorLector.fxml",
+                "Administrador - Estadistica prestamos");
     }
 
     @FXML
     void generarEstGruposAfinidad(ActionEvent event) {
-
+        navegarVentana("/co/edu/uniquindio/biblioteca_digital/biblioteca_digital/estadisticaClusters.fxml",
+                "Administrador - Estadistica Clusteres");
     }
 
     @FXML
