@@ -543,15 +543,10 @@ public class PanelLectorController {
     public void handleVerRecomendaciones() {
         listaRecomendaciones.getItems().clear();
 
-        List<Libro> libros = clasePrincipal.getListaLibros().listarLibrosInorden(); // o el método correcto en tu ArbolLibros
-        Set<String> yaValorados = usuarioRegistrado.getValoraciones()
-                .stream()
-                .map(v -> v.getLibro().getTitulo())
-                .collect(Collectors.toSet());
+        List<Libro> libros = clasePrincipal.getListaLibros().listarLibrosInorden();
 
         List<Libro> recomendados = libros.stream()
-                .filter(libro -> libro.getCalificacionPromedio() >= 4.0) // criterio minimo de recoemndacion
-                .filter(libro -> !yaValorados.contains(libro.getTitulo()))
+                .filter(libro -> libro.getCalificacionPromedio() >= 4.0)
                 .sorted(Comparator.comparingDouble(Libro::getCalificacionPromedio).reversed())
                 .limit(5)
                 .collect(Collectors.toList());
@@ -563,6 +558,7 @@ public class PanelLectorController {
                 listaRecomendaciones.getItems().add(libro.getTitulo() + " - ★ " + String.format("%.1f", libro.getCalificacionPromedio()));
             }
         }
+
     }
 
 
