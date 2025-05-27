@@ -5,7 +5,7 @@ import java.util.List;
 
 public class ListaLector {
 
-    private static NodoLector nodoPrimero;
+    private NodoLector nodoPrimero;
     private int tamanio;
 
     public ListaLector(){
@@ -44,7 +44,7 @@ public class ListaLector {
         return null;
     }
 
-    public static List<Lector> obtenerLectores() {
+    public List<Lector> obtenerLectores() {
         List<Lector> lectores = new ArrayList<>();
         NodoLector actual = nodoPrimero;
 
@@ -95,5 +95,9 @@ public class ListaLector {
         }
 
         return false;
+    }
+
+    public  NodoLector getNodoPrimero() {
+        return nodoPrimero;
     }
 }

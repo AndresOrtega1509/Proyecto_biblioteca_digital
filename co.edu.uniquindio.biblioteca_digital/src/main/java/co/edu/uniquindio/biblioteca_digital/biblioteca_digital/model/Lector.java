@@ -1,8 +1,8 @@
 package co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model;
 
-import java.util.LinkedList;
+import java.util.*;
 
-import static co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Biblioteca.listaLectores;
+//import static co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Biblioteca.listaLectores;
 
 
 public class Lector {
@@ -14,6 +14,7 @@ public class Lector {
     private String passWord;
     public LinkedList<Prestamo> historialPrestamos;
     public LinkedList<Valoracion> valoraciones;
+    private List<Lector> conexiones = new ArrayList<>();
 
     public Lector(String cedula, String nombre, String apellido, String correo, String passWord) {
         this.cedula = cedula;
@@ -91,10 +92,11 @@ public class Lector {
     }
 
     public void prestarLibro(Libro libro) {
+        Biblioteca biblioteca = Biblioteca.getInstancia();
         if (libro.estaDisponible()) {
             libro.setPrestado(true);
             historialPrestamos.add(new Prestamo(libro));
-            listaLectores.buscarLector(cedula).setHistorialPrestamos(historialPrestamos);
+            biblioteca.listaLectores.buscarLector(cedula).setHistorialPrestamos(historialPrestamos);
             System.out.println(nombre + " ha prestado el libro: " + libro.getTitulo());
         } else {
             libro.agregarAListaDeEspera(this);
@@ -114,15 +116,45 @@ public class Lector {
     }
 
     public void devolverLibro(Libro libro) {
+        Biblioteca biblioteca = Biblioteca.getInstancia();
         if (!libro.estaDisponible()) {
             libro.setPrestado(false);
             historialPrestamos.add(new Prestamo(libro));
-            listaLectores.buscarLector(cedula).setHistorialPrestamos(historialPrestamos);
+            biblioteca.listaLectores.buscarLector(cedula).setHistorialPrestamos(historialPrestamos);
             System.out.println(nombre + " ha devuelto el libro: " + libro.getTitulo());
         } else {
             libro.agregarAListaDeEspera(this);
         }
     }
 
+    public void agregarConexion(Lector lector) {
+        if (conexiones == null) {
+            conexiones = new ArrayList<>();
+        }
+        if (!conexiones.contains(lector)) {
+            conexiones.add(lector);
+        }
+    }
 
+    public List<Lector> getConexiones() {
+        return conexiones;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Lector otro = (Lector) obj;
+        return cedula.equals(otro.cedula);
+    }
+
+    @Override
+    public int hashCode() {
+        return cedula.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return nombre + " (" + cedula + ")";
+    }
 }

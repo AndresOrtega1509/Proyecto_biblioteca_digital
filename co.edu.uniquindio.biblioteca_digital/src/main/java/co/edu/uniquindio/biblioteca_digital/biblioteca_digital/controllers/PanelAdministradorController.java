@@ -21,8 +21,8 @@ import javafx.stage.Stage;
 import java.util.List;
 import java.util.Optional;
 
-import static co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Biblioteca.listaLectores;
-import static co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Biblioteca.listaLibros;
+//import static co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Biblioteca.listaLectores;
+//import static co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Biblioteca.listaLibros;
 
 public class PanelAdministradorController implements ObservableLibros {
 
@@ -101,12 +101,12 @@ public class PanelAdministradorController implements ObservableLibros {
     }
 
     private void mostrarUsuariosTabla() {
-        lectoresObservable.setAll(ListaLector.obtenerLectores());
+        lectoresObservable.setAll(biblioteca.listaLectores.obtenerLectores());
         tableUsuarios.setItems(lectoresObservable);
     }
 
     public void mostrarLibrosTabla() {
-        List<Libro> libros = listaLibros.listarLibrosInorden();
+        List<Libro> libros = biblioteca.listaLibros.listarLibrosInorden();
         ObservableList<Libro> librosObservable = FXCollections.observableArrayList(libros);
         tableLibros.setItems(librosObservable);
     }
@@ -215,7 +215,7 @@ public class PanelAdministradorController implements ObservableLibros {
             crearAlerta("Seleccione un libro para eliminarlo", Alert.AlertType.WARNING);
 
         }else {
-            listaLibros.eliminarPorTitulo(libroSeleccionado.getTitulo());
+            biblioteca.listaLibros.eliminarPorTitulo(libroSeleccionado.getTitulo());
             mostrarLibrosTabla();
             crearAlerta("El libro ha sido eliminado exitosamente", Alert.AlertType.INFORMATION);
 
@@ -226,7 +226,7 @@ public class PanelAdministradorController implements ObservableLibros {
     void eliminarUsuario(ActionEvent event) {
         Lector seleccionado = tableUsuarios.getSelectionModel().getSelectedItem();
         if (seleccionado != null) {
-            boolean eliminado = listaLectores.eliminar(seleccionado.getCedula());
+            boolean eliminado = biblioteca.listaLectores.eliminar(seleccionado.getCedula());
             if (eliminado) {
                 lectoresObservable.remove(seleccionado);
             } else {
@@ -254,12 +254,14 @@ public class PanelAdministradorController implements ObservableLibros {
 
     @FXML
     void generarEstLibrosValorados(ActionEvent event) {
-
+        navegarVentana("/co/edu/uniquindio/biblioteca_digital/biblioteca_digital/estadisticaLibrosValorados.fxml",
+                "Administrador - Libros más valorados");
     }
 
     @FXML
     void visualizarGrafoLectores(ActionEvent event) {
-
+        navegarVentana("/co/edu/uniquindio/biblioteca_digital/biblioteca_digital/afinidadGrafo.fxml",
+                "Administrador - Grafo de afinidad");
     }
 
     public void navegarVentanaAgregarLibros(String nombreArchivoFxml, String tituloVentana, ObservableLibros observableLibros) {
@@ -291,7 +293,7 @@ public class PanelAdministradorController implements ObservableLibros {
         }
     }
 
-    public void navegarVentanaAgregarUsuarios(String nombreArchivoFxml, String tituloVentana) {
+    public void navegarVentana(String nombreArchivoFxml, String tituloVentana) {
         try {
 
             // Cargar la vista

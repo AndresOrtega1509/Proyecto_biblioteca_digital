@@ -2,6 +2,7 @@ package co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.chart.XYChart;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -149,6 +150,27 @@ public class ArbolLibros {
             nodo = nodo.izquierda;
         }
         return nodo;
+    }
+
+    public XYChart.Series<String, Number> generarSerieTop3() {
+        List<Libro> todos = listarLibrosInorden();
+
+        // Filtrar libros con al menos una valoración
+        todos.removeIf(libro -> libro.getTotalValoraciones() == 0);
+
+        // Ordenar por promedio descendente
+        todos.sort((l1, l2) -> Double.compare(l2.getCalificacionPromedio(), l1.getCalificacionPromedio()));
+
+        // Crear la serie de JavaFX con máximo 3 libros
+        XYChart.Series<String, Number> datosTopLibros = new XYChart.Series<>();
+        datosTopLibros.setName("Promedio");
+
+        for (int i = 0; i < Math.min(3, todos.size()); i++) {
+            Libro libro = todos.get(i);
+            datosTopLibros.getData().add(new XYChart.Data<>(libro.getTitulo(), libro.getCalificacionPromedio()));
+        }
+
+        return datosTopLibros;
     }
 
 

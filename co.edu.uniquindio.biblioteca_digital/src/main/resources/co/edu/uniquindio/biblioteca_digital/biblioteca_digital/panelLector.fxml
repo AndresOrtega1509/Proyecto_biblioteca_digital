@@ -4,36 +4,84 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<VBox spacing="10" alignment="CENTER" xmlns:fx="http://javafx.com/fxml" fx:controller="co.edu.uniquindio.biblioteca_digital.biblioteca_digital.controllers.PanelLectorController">
-    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="co.edu.uniquindio.biblioteca_digital.biblioteca_digital.controllers.PanelLectorController">
 
-    <Label text="Gestión de lectores - Biblioteca Digital" style="-fx-font-size: 18px;"/>
-    <Label fx:id="labelUsuario" style="-fx-font-size: 18px;" />
+    <!-- Menú superior -->
+    <top>
+        <VBox>
+            <MenuBar>
+                <Menu text="Menu">
+                    <MenuItem onAction="#cerrarSesion" text="Cerrar sesión"/>
+                </Menu>
+            </MenuBar>
 
-    <Label text="Seleccionar Libro"/>
-    <ComboBox fx:id="comboLibros" promptText="Seleccione un libro"/>
+            <Label fx:id="labelUsuario" text="Bienvenido, Lector"
+                   style="-fx-font-size: 16px; -fx-padding: 10;"/>
+        </VBox>
+    </top>
 
-    <HBox spacing="10">
-        <Button text="Prestar libro" fx:id="btnPrestar" onAction="#handlePrestarLibro" disable="true"/>
-        <Button text="devolver libro" fx:id="btndevolver" onAction="#handleDevolverLibro" disable="true"/>
-        <Button text="Valorar libro" fx:id="btnValorar" onAction="#handleValorarLibro" disable="true"/>
-        <Button text="Consultar cola de espera" fx:id="btnConsultarCola" onAction="#handleConsultarListaEspera" disable="true"/>
-        <Button text="Ver historial" fx:id="btnHistorial" onAction="#handleVerHistorial" disable="true"/>
-    </HBox>
+    <!-- Centro con pestañas -->
+    <center>
+        <TabPane tabClosingPolicy="UNAVAILABLE">
 
-    <Label text="estado de los libros"/>
-    <TextArea fx:id="areaLibrosDisponibles" editable="false" prefHeight="70"/>
-    <TextArea fx:id="areaListaEspera" promptText="Lista de espera" editable="false" prefHeight="70"/>
-    <TextArea fx:id="areaHistorial" promptText="Historial" editable="false" prefHeight="70"/>
+            <!-- Tab: Libros -->
+            <Tab text="Gestión de libros">
+                <VBox spacing="10" alignment="CENTER">
+                    <padding>
+                        <Insets top="10" right="10" bottom="10" left="10"/>
+                    </padding>
 
+                    <Label text="Seleccionar Libro"/>
+                    <ComboBox fx:id="comboLibros" promptText="Seleccione un libro"/>
 
-    <Label text="Mensajería entre lectores" style="-fx-font-size: 16px;"/>
+                    <HBox spacing="10">
+                        <Button text="Prestar libro" fx:id="btnPrestar" onAction="#handlePrestarLibro" disable="true"/>
+                        <Button text="Devolver libro" fx:id="btndevolver" onAction="#handleDevolverLibro" disable="true"/>
+                        <Button text="Valorar libro" fx:id="btnValorar" onAction="#handleValorarLibro" disable="true"/>
+                        <Button text="Consultar cola" fx:id="btnConsultarCola" onAction="#handleConsultarListaEspera" disable="true"/>
+                        <Button text="Ver historial" fx:id="btnHistorial" onAction="#handleVerHistorial" disable="true"/>
+                    </HBox>
 
-    <ComboBox fx:id="comboUsuarios" promptText="usuarios conectados"/>
-    <TextArea fx:id="areaMensajes" editable="false" prefHeight="25"/>
-    <TextArea fx:id="chatArea" editable="false" prefHeight="25"/>
+                    <Label text="Estado de los libros"/>
+                    <TextArea fx:id="areaLibrosDisponibles" editable="false" prefHeight="70"/>
+                    <TextArea fx:id="areaListaEspera" promptText="Lista de espera" editable="false" prefHeight="70"/>
+                    <TextArea fx:id="areaHistorial" promptText="Historial" editable="false" prefHeight="70"/>
 
+                </VBox>
+            </Tab>
 
-    <TextField fx:id="txtMensaje" promptText="Escribe tu mensaje aquí..."/>
-    <Button text="Enviar" onAction="#handleEnviarMensaje"/>
-</VBox>
+            <!-- Tab: Mensajería -->
+            <Tab text="Mensajería">
+                <VBox spacing="10" alignment="CENTER">
+                    <padding>
+                        <Insets top="10" right="10" bottom="10" left="10"/>
+                    </padding>
+
+                    <Label text="Mensajería entre lectores"/>
+                    <ComboBox fx:id="comboUsuarios" promptText="Usuarios conectados"/>
+                    <TextArea fx:id="areaMensajes" editable="false" prefHeight="50"/>
+                    <TextArea fx:id="chatArea" editable="false" prefHeight="50"/>
+                    <TextField fx:id="txtMensaje" promptText="Escribe tu mensaje aquí..."/>
+                    <Button text="Enviar" onAction="#handleEnviarMensaje"/>
+
+                </VBox>
+            </Tab>
+
+            <!-- Tab: Sugerencias -->
+            <Tab text="Sugerencias de amistad">
+                <VBox spacing="10" alignment="CENTER">
+                    <padding>
+                        <Insets top="10" right="10" bottom="10" left="10"/>
+                    </padding>
+
+                    <Button text="Ver sugerencias de amigos" onAction="#handleVerSugerencias"/>
+                    <ListView fx:id="listaSugerencias" prefHeight="200"/>
+
+                </VBox>
+            </Tab>
+
+        </TabPane>
+    </center>
+
+</BorderPane>

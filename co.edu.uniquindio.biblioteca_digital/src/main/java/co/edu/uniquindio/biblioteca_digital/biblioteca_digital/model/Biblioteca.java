@@ -4,8 +4,8 @@ package co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model;
 
 public class Biblioteca {
 
-    public static ListaLector listaLectores;
-    public static ArbolLibros listaLibros;
+    public ListaLector listaLectores;
+    public ArbolLibros listaLibros;
     public static Biblioteca INSTANCIA;
     private final Sesion sesion = Sesion.getInstancia();
 
@@ -15,13 +15,37 @@ public class Biblioteca {
         cargarDatosPrueba();
     }
 
+    public ListaLector getListaLectores() {
+        return listaLectores;
+    }
+
+    public void setListaLectores(ListaLector listaLectores) {
+        this.listaLectores = listaLectores;
+    }
+
+    public ArbolLibros getListaLibros() {
+        return listaLibros;
+    }
+
+    public void setListaLibros(ArbolLibros listaLibros) {
+        this.listaLibros = listaLibros;
+    }
+
     private void cargarDatosPrueba() {
 
         Lector lector = new Lector("123", "Miguel", "Sanchez", "miguel@gmail.com", "111");
         listaLectores.agregar(lector);
+        Lector lector2 = new Lector("222", "Sara", "Lopez", "sara@gmail.com", "222");
+        listaLectores.agregar(lector2);
+        Lector lector3 = new Lector("444", "Juan", "Ortiz", "Juan@gmail.com", "444");
+        listaLectores.agregar(lector3);
 
         Libro libro = new Libro("Principito", "Antoine", 1947, "Aventura", false, 0);
         listaLibros.insertar(libro);
+        Libro libro2 = new Libro("WWZ", "Thomas", 2011, "Suspenso", false, 0);
+        listaLibros.insertar(libro2);
+        Libro libro3 = new Libro("Teoria Relatividad", "Einstein", 1975, "Cientifico", false, 0);
+        listaLibros.insertar(libro3);
     }
 
     public Lector registrarLector(String cedula, String nombre, String apellido, String correo, String passWord){

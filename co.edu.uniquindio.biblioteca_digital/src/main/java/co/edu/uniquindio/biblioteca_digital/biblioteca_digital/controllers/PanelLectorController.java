@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -15,9 +16,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.PriorityQueue;
 
-import static co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Biblioteca.listaLectores;
-import static co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.ListaLector.obtenerLectores;
-import static co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Biblioteca.listaLibros;
+//import static co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Biblioteca.listaLectores;
+//import static co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.ListaLector.obtenerLectores;
+//import static co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Biblioteca.listaLibros;
 
 public class PanelLectorController {
 
@@ -27,20 +28,24 @@ public class PanelLectorController {
     @FXML private TextField txtTituloConsultaEspera, txtNombreEspera, txtIdEspera;
     @FXML
     private Label labelUsuario;
+    @FXML
+    private ListView<String> listaSugerencias;
 
     String receptorSelect;
     private Lector usuario;
     private Lector usuarioRegistrado;
     private HashMap<String, Libro> biblioteca = new HashMap<>();
+    private Biblioteca clasePrincipal = Biblioteca.getInstancia();
 
     // Aquí se utiliza una PriorityQueue para simular la cola de espera
     private HashMap<String, PriorityQueue<Lector>> colasEspera = new HashMap<>();
+    private Sesion sesion = Sesion.getInstancia();
 
     public void inicializarUsuario(Lector usuario) {
         usuarioRegistrado = usuario;
         labelUsuario.setText("Bienvenido, " + usuario.getNombre());
         comboUsuarios.getItems().addAll(
-                obtenerLectores()
+                clasePrincipal.listaLectores.obtenerLectores()
                         .stream()
                         .map(Lector::getNombre)
                         .toList()
@@ -90,7 +95,7 @@ public class PanelLectorController {
         //biblioteca.put("Cien años de soledad", new Libro("Cien años de soledad"));
         //biblioteca.put("1984", new Libro("1984"));
 
-        comboLibros.getItems().addAll(listaLibros.listarLibrosInorden());
+        comboLibros.getItems().addAll(clasePrincipal.listaLibros.listarLibrosInorden());
 
         comboLibros.setOnAction(e -> {
             boolean libroSeleccionado = comboLibros.getValue() != null;
@@ -118,7 +123,7 @@ public class PanelLectorController {
 
         if (libro == null) return;
 
-        String LibroPrestado = listaLectores.recorrerLectores(libro);
+        String LibroPrestado = clasePrincipal.listaLectores.recorrerLectores(libro);
 
         if (LibroPrestado == null) {
             if (libro.getEstado().equals("disponible")) {
@@ -244,10 +249,10 @@ public class PanelLectorController {
     private void mostrarLibrosDisponibles() {
 
         StringBuilder sb = new StringBuilder();
-        obtenerLectores().iterator();
+        clasePrincipal.listaLectores.obtenerLectores().iterator();
         Lector librosDisponiblesLector;
         Libro estadoLibroActual;
-        if (listaLectores.getTamanio()>1){
+        if (clasePrincipal.listaLectores.getTamanio()>1){
             mostrarLibrosDisponiblesDspuesDePrestar();
         }else {
             biblioteca.values().forEach(libro -> {
@@ -261,13 +266,13 @@ public class PanelLectorController {
         StringBuilder sb = new StringBuilder();
         areaLibrosDisponibles.setText("");
 
-        obtenerLectores().iterator();
+        clasePrincipal.listaLectores.obtenerLectores().iterator();
         Lector librosDisponiblesLector;
         Libro estadoLibroActual;
         Boolean hayPrestados= false;
 
-        for (int i = 0 ; i <obtenerLectores().size(); i++){
-            librosDisponiblesLector = obtenerLectores().get(i);
+        for (int i = 0 ; i <clasePrincipal.listaLectores.obtenerLectores().size(); i++){
+            librosDisponiblesLector = clasePrincipal.listaLectores.obtenerLectores().get(i);
             if(librosDisponiblesLector.getHistorialPrestamos().size()!= 0) {
                 for (int j=0; j< librosDisponiblesLector.getHistorialPrestamos().size();j++) {
                     estadoLibroActual = librosDisponiblesLector.getHistorialPrestamos().get(j).getLibro();
@@ -286,7 +291,7 @@ public class PanelLectorController {
                 }
             }else {
 
-                if (!hayPrestados && obtenerLectores().size()==i+1){
+                if (!hayPrestados && clasePrincipal.listaLectores.obtenerLectores().size()==i+1){
 
                     biblioteca.values().forEach(libro -> {
                         sb.append("- ").append(libro.getTitulo()).append(" (").append(libro.getEstado()).append(")\n");
@@ -358,7 +363,7 @@ public class PanelLectorController {
     @FXML private TextArea areaMensajes;
     @FXML private TextField txtMensaje;
 
-    private String usuarioActual = obtenerLectores().get(0).getNombre(); // Simulación del usuario conectado
+    private String usuarioActual = clasePrincipal.listaLectores.obtenerLectores().get(0).getNombre(); // Simulación del usuario conectado
     private final HistorialMensajes historial = new HistorialMensajes();
 
 
@@ -417,7 +422,7 @@ public class PanelLectorController {
             //comboUsuarios.getItems().setAll(obtenerLectores());
 
             comboUsuarios.getItems().setAll(
-                    obtenerLectores()
+                    clasePrincipal.listaLectores.obtenerLectores()
                             .stream()
                             .map(Lector::getNombre)
                             .toList()
@@ -437,7 +442,7 @@ public class PanelLectorController {
 
         if (libro == null) return;
 
-        String LibroPrestado = listaLectores.recorrerLectores(libro);
+        String LibroPrestado = clasePrincipal.listaLectores.recorrerLectores(libro);
 
         if (LibroPrestado != null) {
             if (libro.getEstado().equals("prestado")) {
@@ -456,5 +461,31 @@ public class PanelLectorController {
 
         }
         mostrarLibrosDisponibles();
+    }
+
+    @FXML
+    public void handleVerSugerencias() {
+        listaSugerencias.getItems().clear();
+
+        RedLectores red = new RedLectores(clasePrincipal.getListaLectores());
+        ListaLector sugerencias = red.sugerirAmigos(usuarioRegistrado);
+
+        NodoLector actual = sugerencias.getNodoPrimero();
+        while (actual != null) {
+            Lector sugerido = actual.getLector();
+            listaSugerencias.getItems().add(sugerido.getNombre() + " (" + sugerido.getCedula() + ")");
+            actual = actual.getNodoSiguiente();
+        }
+
+        if (listaSugerencias.getItems().isEmpty()) {
+            listaSugerencias.getItems().add("No hay sugerencias por ahora.");
+        }
+    }
+
+    public void cerrarSesion(ActionEvent actionEvent) {
+        mostrarAlerta("Se ha cerrado la sesión correctamente");
+        Stage stage = (Stage) btnPrestar.getScene().getWindow();
+        sesion.cerrarSesion();
+        stage.close();
     }
 }

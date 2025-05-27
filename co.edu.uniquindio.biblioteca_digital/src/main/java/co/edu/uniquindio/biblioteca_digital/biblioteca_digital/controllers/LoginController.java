@@ -13,7 +13,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-import static co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Biblioteca.listaLectores;
+//import static co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Biblioteca.listaLectores;
 
 
 public class LoginController {
@@ -49,7 +49,7 @@ public class LoginController {
 
             crearAlerta("Inicio de sesión exitoso", Alert.AlertType.INFORMATION);
             navegarVentana("/co/edu/uniquindio/biblioteca_digital/biblioteca_digital/panelLector.fxml",
-                    "Biblioteca - Panel principal", usuario, listaLectores);
+                    "Biblioteca - Panel principal", usuario, biblioteca.getListaLectores());
             cerrarVentana();
 
         } catch (Exception e) {

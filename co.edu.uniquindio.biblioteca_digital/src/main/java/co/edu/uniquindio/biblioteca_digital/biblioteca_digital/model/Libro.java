@@ -103,6 +103,10 @@ public class Libro {
         return prestado ? "prestado" : "disponible";
     }
 
+    public int getTotalValoraciones() {
+        return totalValoraciones;
+    }
+
     @Override
     public String toString() {
         return "Titulo: " + titulo + '\n' +
