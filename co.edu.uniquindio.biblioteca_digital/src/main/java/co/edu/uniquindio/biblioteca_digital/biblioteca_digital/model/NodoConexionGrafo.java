@@ -3,12 +3,12 @@ package co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NodoRed {
+public class NodoConexionGrafo {
 
     private Lector lector;
-    private List<NodoRed> conexiones;
+    private List<NodoConexionGrafo> conexiones;
 
-    public NodoRed(Lector lector) {
+    public NodoConexionGrafo(Lector lector) {
         this.lector = lector;
         this.conexiones = new ArrayList<>();
     }
@@ -17,11 +17,11 @@ public class NodoRed {
         return lector;
     }
 
-    public List<NodoRed> getConexiones() {
+    public List<NodoConexionGrafo> getConexiones() {
         return conexiones;
     }
 
-    public void agregarConexion(NodoRed otro) {
+    public void agregarConexion(NodoConexionGrafo otro) {
         if (!conexiones.contains(otro)) {
             conexiones.add(otro);
         }

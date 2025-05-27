@@ -15,12 +15,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 
-//import static co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Biblioteca.listaLibros;
-
-//import static co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Biblioteca.listaLectores;
-//import static co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.ListaLector.obtenerLectores;
-//import static co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Biblioteca.listaLibros;
-
 public class PanelLectorController {
 
     @FXML
@@ -53,6 +47,7 @@ public class PanelLectorController {
         comboUsuarios.getItems().addAll(
                 clasePrincipal.listaLectores.obtenerLectores()
                         .stream()
+                        .filter(l -> !l.getCedula().equals(usuarioRegistrado.getCedula())) // excluir el usuario actual
                         .map(Lector::getNombre)
                         .toList()
         );
@@ -453,7 +448,7 @@ public class PanelLectorController {
 
         // Mostrar el historial actualizado en pantalla
         mostrarMensajes(receptorSelect);
-        chatArea.appendText("Yo a " + receptorSelect + ": " + mensaje + "\n");
+        chatArea.appendText(receptorSelect + " a: " + mensaje + "\n");
 
         // Limpiar campo de entrada
         txtMensaje.clear();
@@ -499,23 +494,20 @@ public class PanelLectorController {
 
         if (libro == null) return;
 
-        String LibroPrestado = clasePrincipal.listaLectores.recorrerLectores(libro);
+        String libroPrestado = clasePrincipal.listaLectores.recorrerLectores(libro);
 
-        if (LibroPrestado != null) {
-            if (libro.getEstado().equals("prestado")) {
+        if (libroPrestado != null) {
+            if (libro.getEstado().equals("prestado") && libroPrestado.equalsIgnoreCase(usuarioRegistrado.getNombre())) {
                 usuarioRegistrado.devolverLibro(libro);
                 mostrarAlerta("Libro devuelto con éxito.");
                 // mostrarLibrosDisponiblesDspuesDePrestar();
                 actualizarHistorial();
 
             } else {
-                libro.getListaDeEspera().add(usuarioRegistrado);
-                mostrarAlerta("El libro ya está prestado. Has sido agregado a la cola de espera. Tu posición: " + libro.getListaDeEspera().size());
+                mostrarAlerta("No puede devolver un libro prestado de otro lector");
             }
         } else {
-            libro.getListaDeEspera().add(usuarioRegistrado);
-            mostrarAlerta("El libro ya está prestado al lector: " + LibroPrestado + " Has sido agregado a la cola de espera. Tu posición: " + libro.getListaDeEspera().size());
-
+            mostrarAlerta("El libro no se puede devolver porque no se le ha prestado ha ningun lector");
         }
         mostrarLibrosDisponibles();
     }
@@ -524,7 +516,7 @@ public class PanelLectorController {
     public void handleVerSugerencias() {
         listaSugerencias.getItems().clear();
 
-        RedLectores red = new RedLectores(clasePrincipal.getListaLectores());
+        ConexionLectoresGrafo red = new ConexionLectoresGrafo(clasePrincipal.getListaLectores());
         ListaLector sugerencias = red.sugerirAmigos(usuarioRegistrado);
 
         NodoLector actual = sugerencias.getNodoPrimero();

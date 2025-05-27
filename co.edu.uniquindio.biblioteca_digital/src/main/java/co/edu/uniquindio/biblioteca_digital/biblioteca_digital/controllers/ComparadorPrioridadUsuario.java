@@ -8,7 +8,7 @@ public class ComparadorPrioridadUsuario implements Comparator<Lector> {
 
     @Override
     public int compare(Lector u1, Lector u2) {
-        // Puedes personalizar la prioridad. Por ahora es neutral.
+
         return 0;
     }
 

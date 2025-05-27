@@ -1,13 +1,12 @@
 package co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model;
 
 import java.util.*;
-import static co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.ListaLector.*;
 
-public class RedLectores {
+public class ConexionLectoresGrafo {
 
     private ListaLector listaLectores;
 
-    public RedLectores(ListaLector listaLectores) {
+    public ConexionLectoresGrafo(ListaLector listaLectores) {
         this.listaLectores = listaLectores;
         crearConexionesSimilares();
     }

@@ -2,8 +2,6 @@ package co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model;
 
 import java.util.*;
 
-//import static co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Biblioteca.listaLectores;
-
 
 public class Lector {
 
@@ -91,15 +89,17 @@ public class Lector {
         this.historialPrestamos = historialPrestamos;
     }
 
-    public void prestarLibro(Libro libro) {
+    public String prestarLibro(Libro libro) {
         Biblioteca biblioteca = Biblioteca.getInstancia();
         if (libro.estaDisponible()) {
             libro.setPrestado(true);
             historialPrestamos.add(new Prestamo(libro));
             biblioteca.listaLectores.buscarLector(cedula).setHistorialPrestamos(historialPrestamos);
             System.out.println(nombre + " ha prestado el libro: " + libro.getTitulo());
+            return "prestado con exito";
         } else {
             libro.agregarAListaDeEspera(this);
+            return "No se pudo prestar el libro";
         }
     }
 

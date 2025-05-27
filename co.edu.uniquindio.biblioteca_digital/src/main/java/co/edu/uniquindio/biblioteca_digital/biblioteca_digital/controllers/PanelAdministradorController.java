@@ -21,8 +21,6 @@ import javafx.stage.Stage;
 import java.util.List;
 import java.util.Optional;
 
-//import static co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Biblioteca.listaLectores;
-//import static co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Biblioteca.listaLibros;
 
 public class PanelAdministradorController implements ObservableLibros {
 

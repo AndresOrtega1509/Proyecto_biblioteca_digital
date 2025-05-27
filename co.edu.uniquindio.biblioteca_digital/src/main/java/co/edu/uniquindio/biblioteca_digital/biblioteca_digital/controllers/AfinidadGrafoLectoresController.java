@@ -1,12 +1,8 @@
 package co.edu.uniquindio.biblioteca_digital.biblioteca_digital.controllers;
 
 import co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.*;
-import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
@@ -15,7 +11,6 @@ import javafx.scene.text.Text;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 public class AfinidadGrafoLectoresController {
 
@@ -23,17 +18,17 @@ public class AfinidadGrafoLectoresController {
     private Pane grafoPane;
 
     private final Biblioteca biblioteca = Biblioteca.getInstancia();
-    private RedLectores redLectores;
+    private ConexionLectoresGrafo conexionLectoresGrafo;
 
     @FXML
     public void initialize() {
-        redLectores = new RedLectores(biblioteca.getListaLectores());
+        conexionLectoresGrafo = new ConexionLectoresGrafo(biblioteca.getListaLectores());
         dibujarGrafo();
     }
 
     @FXML
     public void handleActualizarGrafo() {
-        redLectores.actualizarConexiones();
+        conexionLectoresGrafo.actualizarConexiones();
         grafoPane.getChildren().clear();
         dibujarGrafo();
     }

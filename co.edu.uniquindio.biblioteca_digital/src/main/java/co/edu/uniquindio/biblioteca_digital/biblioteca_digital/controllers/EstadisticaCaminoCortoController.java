@@ -2,7 +2,7 @@ package co.edu.uniquindio.biblioteca_digital.biblioteca_digital.controllers;
 
 import co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Biblioteca;
 import co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Lector;
-import co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.RedLectores;
+import co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.ConexionLectoresGrafo;
 import co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.ListaLector;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -16,12 +16,12 @@ public class EstadisticaCaminoCortoController {
     @FXML private ComboBox<Lector> comboDestino;
     @FXML private ListView<String> listaCamino;
 
-    private RedLectores red;
+    private ConexionLectoresGrafo red;
 
     @FXML
     public void initialize() {
         ListaLector listaLectores = Biblioteca.getInstancia().getListaLectores();
-        red = new RedLectores(listaLectores);
+        red = new ConexionLectoresGrafo(listaLectores);
 
         List<Lector> lectores = listaLectores.obtenerLectores();
         comboOrigen.setItems(FXCollections.observableArrayList(lectores));
