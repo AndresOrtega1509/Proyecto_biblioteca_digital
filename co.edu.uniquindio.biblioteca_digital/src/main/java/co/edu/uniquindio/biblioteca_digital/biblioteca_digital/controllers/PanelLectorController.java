@@ -12,6 +12,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 //import static co.edu.uniquindio.biblioteca_digital.biblioteca_digital.model.Biblioteca.listaLibros;
@@ -32,6 +33,9 @@ public class PanelLectorController {
     private ListView<String> listaSugerencias;
     @FXML private TextField txtBuscar;
     @FXML private ComboBox<String> comboCriterio;
+    @FXML
+    private ListView<String> listaRecomendaciones;
+
 
     String receptorSelect;
     private Lector usuario;
@@ -534,6 +538,33 @@ public class PanelLectorController {
             listaSugerencias.getItems().add("No hay sugerencias por ahora.");
         }
     }
+
+    @FXML
+    public void handleVerRecomendaciones() {
+        listaRecomendaciones.getItems().clear();
+
+        List<Libro> libros = clasePrincipal.getListaLibros().listarLibrosInorden(); // o el método correcto en tu ArbolLibros
+        Set<String> yaValorados = usuarioRegistrado.getValoraciones()
+                .stream()
+                .map(v -> v.getLibro().getTitulo())
+                .collect(Collectors.toSet());
+
+        List<Libro> recomendados = libros.stream()
+                .filter(libro -> libro.getCalificacionPromedio() >= 4.0) // criterio minimo de recoemndacion
+                .filter(libro -> !yaValorados.contains(libro.getTitulo()))
+                .sorted(Comparator.comparingDouble(Libro::getCalificacionPromedio).reversed())
+                .limit(5)
+                .collect(Collectors.toList());
+
+        if (recomendados.isEmpty()) {
+            listaRecomendaciones.getItems().add("No hay recomendaciones disponibles.");
+        } else {
+            for (Libro libro : recomendados) {
+                listaRecomendaciones.getItems().add(libro.getTitulo() + " - ★ " + String.format("%.1f", libro.getCalificacionPromedio()));
+            }
+        }
+    }
+
 
     public void cerrarSesion(ActionEvent actionEvent) {
         mostrarAlerta("Se ha cerrado la sesión correctamente");

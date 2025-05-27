@@ -87,6 +87,19 @@
                 </VBox>
             </Tab>
 
+            <Tab text="Recomendaciones">
+                <VBox spacing="10" alignment="CENTER">
+                    <padding>
+                        <Insets top="10" right="10" bottom="10" left="10"/>
+                    </padding>
+
+                    <Button text="Ver recomendaciones" onAction="#handleVerRecomendaciones"/>
+                    <ListView fx:id="listaRecomendaciones" prefHeight="200"/>
+
+                </VBox>
+            </Tab>
+
+
         </TabPane>
     </center>
 
